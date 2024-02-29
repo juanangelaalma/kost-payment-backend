@@ -11,3 +11,21 @@ services:
       - ./src:/app/src
     env_file:
       - .env
+    depends_on:
+      - mysql
+  mysql:
+    container_name: kost-payment-db
+    image: 'mysql/mysql-server:8.0'
+    ports:
+      - '${DB_PORT:-3306}:3306'
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_DATABASE: '${DB_DATABASE}'
+      MYSQL_USER: '${DB_USERNAME}'
+      MYSQL_PASSWORD: '${DB_PASSWORD}'
+
+networks:
+  kost-payment-network:
+    driver: bridge

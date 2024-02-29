@@ -8,4 +8,4 @@ shell:
 	docker exec -it kost-payment-web sh -l
 
 shell-db:
-	docker exec -it kost-payment-web-db bash -l
+	docker exec -it kost-payment-db bash -l
