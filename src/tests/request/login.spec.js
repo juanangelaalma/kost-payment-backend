@@ -2,6 +2,7 @@ const request = require("supertest");
 const app = require("../../app");
 const { User, sequelize } = require("../../models");
 const truncateTables = require("../../utils/truncateTables");
+const UserFactory = require("../../factories/user.factory");
 
 describe("Login request test", () => {
     afterEach((done) => {
@@ -11,16 +12,11 @@ describe("Login request test", () => {
 
     describe("when email and password is correct", () => {
         it("should response with 200 OK", async () => {
-            const user = await User.create({
-                email: "user@gmail.com",
-                name: "User",
-                password: "password123",
-                role: "tenant",
-            });
+            const user = await UserFactory.createRandomUser();
 
             const response = await request(app)
                 .post("/api/login")
-                .send({ email: "user@gmail.com", password: "password123" });
+                .send({ email: user.email, password: user.password });
 
             expect(response.status).toEqual(200);
             expect(response.body).toEqual({
@@ -38,17 +34,14 @@ describe("Login request test", () => {
 
     describe("when email is incorrect", () => {
         it("should response with 401 Forbidden", async () => {
-            await User.create({
-                email: "user@gmail.com",
-                name: "User",
-                password: "password123",
-                role: "tenant",
-            });
+            const user = await UserFactory.createRandomUser();
 
-            const response = await request(app).post("/api/login").send({
-                email: "wrong-email@gmail.com",
-                password: "password123",
-            });
+            const response = await request(app)
+                .post("/api/login")
+                .send({
+                    email: `wrong-${user.email}`,
+                    password: user.password,
+                });
 
             expect(response.status).toEqual(401);
             expect(response.body).toEqual({
