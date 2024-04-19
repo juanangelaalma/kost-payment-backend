@@ -25,6 +25,7 @@ describe("Login request test", () => {
                     id: user.id,
                     email: user.email,
                     name: user.name,
+                    password: user.password,
                     role: user.role,
                 },
                 message: null,

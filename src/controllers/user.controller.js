@@ -15,6 +15,7 @@ const loginHandler = async (req, res) => {
       id: user.id,
       email: user.email,
       name: user.name,
+      password: user.password,
       role: user.role
     }
 
