@@ -192,25 +192,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BillsHistoryResponseSuccess"
+                  "$ref": "#/components/schemas/PaymentResponseCreated"
                 },
                 "example": {
                   "success": true,
                   "data": {
-                    "invoice": "local",
-                    "amount": 200,
-                    "deadline": "20-10-10",
+                    "invoice": "INV0844050",
                     "status": "pending",
-                    "payment": {
-                      "name": "BNI Virtual Account",
-                      "logo": "https://aksihijau.com/bni.jpg",
-                      "bank": {
-                        "name": "BCA",
-                        "vaNumber": "812785002530231"
-                      }
-                    },
                     "_links": {
-                      "": "/api/biils/1/instruction"
+                      "instruction": "/api/payments/INV0844050/instruction"
                     }
                   },
                   "message": ""
@@ -236,6 +226,41 @@
               "invoice": {
                 "type": "string"
               },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "paid",
+                  "pending",
+                  "failed"
+                ]
+              },
+              "_links": {
+                "type": "object",
+                "properties": {
+                  "instruction": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "PaymentInstrunctionResponseSuccess": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "invoice": {
+                "type": "string"
+              },
               "amount": {
                 "type": "integer"
               },
@@ -244,27 +269,26 @@
               },
               "status": {
                 "type": "string",
-                "enum": ["paid", "pending", "failed"]
+                "enum": [
+                  "paid",
+                  "pending",
+                  "failed"
+                ]
               },
               "payment": {
                 "type": "object",
                 "properties": {
-                  "name": {
+                  "title": {
                     "type": "string"
                   },
                   "logo": {
                     "type": "string"
                   },
-                  "bank": {
-                    "type": "object",
-                    "properties": {
-                      "name": {
-                        "type": "string"
-                      },
-                      "vaNumber": {
-                        "type": "string"
-                      }
-                    }
+                  "name": {
+                    "type": "string"
+                  },
+                  "vaNumber": {
+                    "type": "string"
                   }
                 }
               }

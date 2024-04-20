@@ -43,9 +43,22 @@ const getBillsUser = (user) => {
   })
 }
 
+const getBillById = (id) => {
+  return Bill.findByPk(id, {
+    include: [
+      {
+        model: Payment,
+        required: false,
+        as: 'payments',
+      },
+    ],
+  })
+}
+
 const BillService = {
   getTotalBillsUser,
-  getBillsUser
+  getBillsUser,
+  getBillById
 }
 
 module.exports = BillService
