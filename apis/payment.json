@@ -1,0 +1,385 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Payment",
+    "description": "API terkait pembayaran.",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/total-bills": {
+      "get": {
+        "summary": "Total tagihan pengguna",
+        "parameters": [
+          {
+            "name": "Username",
+            "in": "header",
+            "description": "Username pengguna",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Password",
+            "in": "header",
+            "description": "Password pengguna",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sukses cek tagihan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BillResponseSuccess"
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "total": 30000000
+                  },
+                  "message": ""
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Username dan Password yang dikirim tidak benar",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponseError"
+                },
+                "example": {
+                  "success": false,
+                  "data": {},
+                  "message": "Email atau password salah"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/bills": {
+      "get": {
+        "summary": "Riwayat tagihan pengguna",
+        "parameters": [
+          {
+            "name": "Username",
+            "in": "header",
+            "description": "Username pengguna",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Password",
+            "in": "header",
+            "description": "Password pengguna",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Limit",
+            "in": "query",
+            "description": "Batas jumlah riwayat yang ingin ditampilkan",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sukses mendapatkan riwayat tagihan pengguna",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BillsHistoryResponseSuccess"
+                },
+                "example": {
+                  "success": true,
+                  "data": [
+                    {
+                      "id": 1,
+                      "month": "Juli",
+                      "bill": 30000000,
+                      "status": "pending",
+                      "_links": {
+                        "pay": "https://kost.com/api/bills/1/pay",
+                        "details": "https://kost.com/api/1/bills/details"
+                      }
+                    }
+                  ],
+                  "message": ""
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Username dan Password yang dikirim tidak benar",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponseError"
+                },
+                "example": {
+                  "success": false,
+                  "data": {},
+                  "message": "Email atau password salah"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/bills/:id/pay": {
+      "post": {
+        "summary": "Endpoints untuk bayar",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Username",
+            "in": "header",
+            "description": "Username pengguna",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Password",
+            "in": "header",
+            "description": "Password pengguna",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestBodyPay"
+              },
+              "example": {
+                "paymentMethod": "bri"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sukses mendapatkan riwayat tagihan pengguna",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BillsHistoryResponseSuccess"
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "invoice": "local",
+                    "amount": 200,
+                    "deadline": "20-10-10",
+                    "status": "pending",
+                    "payment": {
+                      "name": "BNI Virtual Account",
+                      "logo": "https://aksihijau.com/bni.jpg",
+                      "bank": {
+                        "name": "BCA",
+                        "vaNumber": "812785002530231"
+                      }
+                    },
+                    "_links": {
+                      "": "/api/biils/1/instruction"
+                    }
+                  },
+                  "message": ""
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "PaymentResponseCreated": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "invoice": {
+                "type": "string"
+              },
+              "amount": {
+                "type": "integer"
+              },
+              "deadline": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string",
+                "enum": ["paid", "pending", "failed"]
+              },
+              "payment": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "logo": {
+                    "type": "string"
+                  },
+                  "bank": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "vaNumber": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "BillResponseSuccess": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "total": {
+                "type": "number"
+              }
+            }
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "BillsHistoryResponseSuccess": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "number"
+                },
+                "month": {
+                  "type": "string"
+                },
+                "bill": {
+                  "type": "number"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "pending",
+                    "unpaid",
+                    "paid"
+                  ]
+                },
+                "_links": {
+                  "type": "object",
+                  "properties": {
+                    "pay": {
+                      "type": "string"
+                    },
+                    "details": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "RequestBodyPay": {
+        "type": "object",
+        "properties": {
+          "paymentMethod": {
+            "type": "string"
+          }
+        }
+      },
+      "LoginResponseError": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number"
+              },
+              "email": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "role": {
+                "type": "string",
+                "enum": [
+                  "tenant",
+                  "admin"
+                ]
+              }
+            }
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

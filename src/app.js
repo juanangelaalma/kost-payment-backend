@@ -8,18 +8,20 @@ const PORT = process.env.PORT || 3000
 
 const db = require('./models')
 const routes = require('./routes')
+const deserializeUser = require('./middlewares/deserializeUser')
 
 app.use(bodyParser.json())
 app.use(cors())
 app.use(express.urlencoded({ extended: true }))
+app.use(deserializeUser)
 
 routes(app)
 
-db.sequelize.sync().then(() => {
-  console.log('Database connected')
-  app.listen(PORT, () => {
-    console.log(`Server listening on port ${PORT}`)
+const server = app.listen(PORT, () => {
+  db.sequelize.sync().then(() => {
+    console.log('Database connected')
   })
+  console.log(`Server listening on port ${PORT}`)
 })
 
-module.exports = app
+module.exports = { app, server }

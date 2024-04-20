@@ -10,7 +10,7 @@ describe("truncateTables.js", () => {
             role: "tenant",
         });
 
-        truncateTables()
+        await truncateTables()
 
         const userCount = await User.count()
 

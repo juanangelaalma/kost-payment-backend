@@ -1,5 +1,5 @@
 const request = require("supertest");
-const app = require("../../app");
+const {app, server} = require("../../app");
 const { User, sequelize } = require("../../models");
 const truncateTables = require("../../utils/truncateTables");
 const UserFactory = require("../../factories/user.factory");
@@ -9,6 +9,10 @@ describe("Login request test", () => {
         truncateTables();
         done();
     });
+
+    afterAll((done) => {
+        server.close(done)
+    })
 
     describe("when email and password is correct", () => {
         it("should response with 200 OK", async () => {
