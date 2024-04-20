@@ -1,11 +1,11 @@
 const { Bill } = require('../models')
 
-const createBillUser = (user, amount) => {
+const createBillUser = (user, amount, date = new Date) => {
   const userId = user.id
 
   return Bill.create({
     userId,
-    date: new Date(),
+    date: date,
     amount: amount,
   })
 }

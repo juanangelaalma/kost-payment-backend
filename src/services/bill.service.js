@@ -1,5 +1,6 @@
 const { Op } = require("sequelize")
 const { Bill, Payment } = require("../models")
+const { sortBy, orderBy } = require("lodash")
 
 const getTotalBillsUser = async (user) => {
   const bills = await Bill.findAll({
@@ -38,6 +39,7 @@ const getBillsUser = (user) => {
         as: 'payments',
       },
     ],
+    order: [['date', 'DESC']]
   })
 }
 

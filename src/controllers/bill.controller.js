@@ -33,7 +33,7 @@ const getBillsUserHandler = async (req, res) => {
   try {
     const bills = await BillService.getBillsUser(user)
 
-    const formattedBills = bills.map((bill) => {
+    let formattedBills = bills.map((bill) => {
       return {
         id: bill.id,
         month: bill.month,
@@ -46,6 +46,19 @@ const getBillsUserHandler = async (req, res) => {
         }
       }
     })
+
+    // Filter by status
+    const statuses = req.query.status
+    if (statuses) {
+      const arrayOfStatuses = statuses.split('|')
+      formattedBills = formattedBills.filter(bill => arrayOfStatuses.includes(bill.status))
+    }
+
+    // Limit the number of bills
+    const limit = req.query.limit
+    if (limit) {
+      formattedBills = formattedBills.slice(0, limit)
+    }
 
     return res.send(createApiResponse(true, formattedBills, null))
   } catch (error) {

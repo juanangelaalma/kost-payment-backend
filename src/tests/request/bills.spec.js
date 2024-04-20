@@ -139,8 +139,8 @@ describe("Bills request test", () => {
       it('should response with bills', async () => {
         const user = await UserFactory.createRandomUser()
 
-        const bill1 = await BillFactory.createBillUser(user, 200000)
-        const bill2 = await BillFactory.createBillUser(user, 300000)
+        const bill1 = await BillFactory.createBillUser(user, 100000, new Date(2021, 0, 1))
+        const bill2 = await BillFactory.createBillUser(user, 200000, new Date(2021, 1, 1))
 
         const response = await request(app)
           .get('/api/bills')
@@ -152,27 +152,27 @@ describe("Bills request test", () => {
           success: true,
           data: [
             {
+              id: bill2.id,
+              month: bill2.month,
+              year: bill2.year,
+              amount: "Rp 200.000,00",
+              status: "unpaid",
+              _links: {
+                pay: `/api/bills/${bill2.id}/pay`,
+                details: `/api/bills/${bill2.id}/details`
+              }
+            },
+            {
               id: bill1.id,
               month: bill1.month,
               year: bill1.year,
-              amount: "Rp 200.000,00",
+              amount: "Rp 100.000,00",
               status: "unpaid",
               _links: {
                 pay: `/api/bills/${bill1.id}/pay`,
                 details: `/api/bills/${bill1.id}/details`
               }
             },
-            {
-              id: bill2.id,
-              month: bill1.month,
-              year: bill1.year,
-              amount: "Rp 300.000,00",
-              status: "unpaid",
-              _links: {
-                pay: `/api/bills/${bill2.id}/pay`,
-                details: `/api/bills/${bill2.id}/details`
-              }
-            }
           ],
           message: null,
         })
@@ -183,10 +183,10 @@ describe("Bills request test", () => {
       it('should response with bills', async () => {
         const user = await UserFactory.createRandomUser()
 
-        const bill1 = await BillFactory.createBillUser(user, 100000)
-        const bill2 = await BillFactory.createBillUser(user, 200000)
-        const bill3 = await BillFactory.createBillUser(user, 300000)
-        const bill4 = await BillFactory.createBillUser(user, 400000)
+        const bill1 = await BillFactory.createBillUser(user, 100000, new Date(2021, 0, 1))
+        const bill2 = await BillFactory.createBillUser(user, 200000, new Date(2021, 1, 1))
+        const bill3 = await BillFactory.createBillUser(user, 300000, new Date(2021, 2, 1))
+        const bill4 = await BillFactory.createBillUser(user, 400000, new Date(2021, 3, 1))
 
         const paymentMethod = await PaymentMethodFactory.createPaymentMethod()
         const payment1 = await PaymentFactory.createPaymentBill({ bill: bill1, paymentMethod, status: 'paid', paidAt: new Date() })
@@ -204,25 +204,14 @@ describe("Bills request test", () => {
           success: true,
           data: [
             {
-              id: bill1.id,
-              month: bill1.month,
-              year: bill1.year,
-              amount: "Rp 100.000,00",
-              status: "paid",
+              id: bill4.id,
+              month: bill4.month,
+              year: bill4.year,
+              amount: "Rp 400.000,00",
+              status: "unpaid",
               _links: {
-                pay: `/api/bills/${bill1.id}/pay`,
-                details: `/api/bills/${bill1.id}/details`
-              }
-            },
-            {
-              id: bill2.id,
-              month: bill2.month,
-              year: bill2.year,
-              amount: "Rp 200.000,00",
-              status: "pending",
-              _links: {
-                pay: `/api/bills/${bill2.id}/pay`,
-                details: `/api/bills/${bill2.id}/details`
+                pay: `/api/bills/${bill4.id}/pay`,
+                details: `/api/bills/${bill4.id}/details`
               }
             },
             {
@@ -237,18 +226,188 @@ describe("Bills request test", () => {
               }
             },
             {
-              id: bill4.id,
-              month: bill4.month,
-              year: bill4.year,
-              amount: "Rp 400.000,00",
-              status: "unpaid",
+              id: bill2.id,
+              month: bill2.month,
+              year: bill2.year,
+              amount: "Rp 200.000,00",
+              status: "pending",
               _links: {
-                pay: `/api/bills/${bill4.id}/pay`,
-                details: `/api/bills/${bill4.id}/details`
+                pay: `/api/bills/${bill2.id}/pay`,
+                details: `/api/bills/${bill2.id}/details`
+              }
+            },
+            {
+              id: bill1.id,
+              month: bill1.month,
+              year: bill1.year,
+              amount: "Rp 100.000,00",
+              status: "paid",
+              _links: {
+                pay: `/api/bills/${bill1.id}/pay`,
+                details: `/api/bills/${bill1.id}/details`
               }
             },
           ],
           message: null,
+        })
+      })
+
+      describe('with filter', () => {
+        it('should response with bills', async () => {
+          const user = await UserFactory.createRandomUser()
+
+          const bill1 = await BillFactory.createBillUser(user, 100000, new Date(2021, 0, 1))
+          const bill2 = await BillFactory.createBillUser(user, 200000, new Date(2021, 1, 1))
+          const bill3 = await BillFactory.createBillUser(user, 300000, new Date(2021, 2, 1))
+          const bill4 = await BillFactory.createBillUser(user, 400000, new Date(2021, 3, 1))
+
+          const paymentMethod = await PaymentMethodFactory.createPaymentMethod()
+          const payment1 = await PaymentFactory.createPaymentBill({ bill: bill1, paymentMethod, status: 'paid', paidAt: new Date() })
+          const payment2 = await PaymentFactory.createPaymentBill({ bill: bill2, paymentMethod, status: 'pending' })
+          const payment3 = await PaymentFactory.createPaymentBill({ bill: bill3, paymentMethod, status: 'pending' })
+          const payment3_1 = await PaymentFactory.createPaymentBill({ bill: bill3, paymentMethod, status: 'paid' })
+
+          const response = await request(app)
+            .get('/api/bills?status=paid|unpaid')
+            .set('email', user.email)
+            .set('password', user.password)
+
+          expect(response.status).toEqual(200)
+          expect(response.body.data.length).toEqual(3)
+          expect(response.body).toEqual({
+            success: true,
+            data: [
+              {
+                id: bill4.id,
+                month: bill4.month,
+                year: bill4.year,
+                amount: "Rp 400.000,00",
+                status: "unpaid",
+                _links: {
+                  pay: `/api/bills/${bill4.id}/pay`,
+                  details: `/api/bills/${bill4.id}/details`
+                }
+              },
+              {
+                id: bill3.id,
+                month: bill3.month,
+                year: bill3.year,
+                amount: "Rp 300.000,00",
+                status: "paid",
+                _links: {
+                  pay: `/api/bills/${bill3.id}/pay`,
+                  details: `/api/bills/${bill3.id}/details`
+                }
+              },
+              {
+                id: bill1.id,
+                month: bill1.month,
+                year: bill1.year,
+                amount: "Rp 100.000,00",
+                status: "paid",
+                _links: {
+                  pay: `/api/bills/${bill1.id}/pay`,
+                  details: `/api/bills/${bill1.id}/details`
+                }
+              },
+            ],
+            message: null,
+          })
+        })
+      })
+
+      describe('with limit', () => {
+        it('should response with bills', async () => {
+          const user = await UserFactory.createRandomUser()
+
+          const bill1 = await BillFactory.createBillUser(user, 100000, new Date(2021, 0, 1))
+          const bill2 = await BillFactory.createBillUser(user, 200000, new Date(2021, 1, 1))
+          const bill3 = await BillFactory.createBillUser(user, 300000, new Date(2021, 2, 1))
+          const bill4 = await BillFactory.createBillUser(user, 400000, new Date(2021, 3, 1))
+
+          const paymentMethod = await PaymentMethodFactory.createPaymentMethod()
+          const payment1 = await PaymentFactory.createPaymentBill({ bill: bill1, paymentMethod, status: 'paid', paidAt: new Date() })
+          const payment2 = await PaymentFactory.createPaymentBill({ bill: bill2, paymentMethod, status: 'pending' })
+          const payment3 = await PaymentFactory.createPaymentBill({ bill: bill3, paymentMethod, status: 'pending' })
+          const payment3_1 = await PaymentFactory.createPaymentBill({ bill: bill3, paymentMethod, status: 'paid' })
+
+          const response = await request(app)
+            .get('/api/bills?limit=2')
+            .set('email', user.email)
+            .set('password', user.password)
+
+          expect(response.status).toEqual(200)
+          expect(response.body.data.length).toEqual(2)
+          expect(response.body).toEqual({
+            success: true,
+            data: [
+              {
+                id: bill4.id,
+                month: bill4.month,
+                year: bill4.year,
+                amount: "Rp 400.000,00",
+                status: "unpaid",
+                _links: {
+                  pay: `/api/bills/${bill4.id}/pay`,
+                  details: `/api/bills/${bill4.id}/details`
+                }
+              },
+              {
+                id: bill3.id,
+                month: bill3.month,
+                year: bill3.year,
+                amount: "Rp 300.000,00",
+                status: "paid",
+                _links: {
+                  pay: `/api/bills/${bill3.id}/pay`,
+                  details: `/api/bills/${bill3.id}/details`
+                }
+              },
+            ],
+            message: null,
+          })
+        })
+      })
+      
+      describe('with filter and limit', () => {
+        it('should response with bills', async () => {
+          const user = await UserFactory.createRandomUser()
+
+          const bill1 = await BillFactory.createBillUser(user, 100000, new Date(2021, 0, 1))
+          const bill2 = await BillFactory.createBillUser(user, 200000, new Date(2021, 1, 1))
+          const bill3 = await BillFactory.createBillUser(user, 300000, new Date(2021, 2, 1))
+          const bill4 = await BillFactory.createBillUser(user, 400000, new Date(2021, 3, 1))
+
+          const paymentMethod = await PaymentMethodFactory.createPaymentMethod()
+          const payment1 = await PaymentFactory.createPaymentBill({ bill: bill1, paymentMethod, status: 'paid', paidAt: new Date() })
+          const payment2 = await PaymentFactory.createPaymentBill({ bill: bill2, paymentMethod, status: 'pending' })
+          const payment3 = await PaymentFactory.createPaymentBill({ bill: bill3, paymentMethod, status: 'pending' })
+          const payment3_1 = await PaymentFactory.createPaymentBill({ bill: bill3, paymentMethod, status: 'paid' })
+
+          const response = await request(app)
+            .get('/api/bills?limit=1&status=paid|pending')
+            .set('email', user.email)
+            .set('password', user.password)
+
+          expect(response.status).toEqual(200)
+          expect(response.body.data.length).toEqual(1)
+          expect(response.body).toEqual({
+            success: true,
+            data: [
+              {
+                id: bill3.id,
+                month: bill3.month,
+                year: bill3.year,
+                amount: "Rp 300.000,00",
+                status: "paid",
+                _links: {
+                  pay: `/api/bills/${bill3.id}/pay`,
+                  details: `/api/bills/${bill3.id}/details`
+                }
+              },
+            ],
+            message: null,
+          })
         })
       })
     })
