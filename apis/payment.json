@@ -111,7 +111,8 @@
                     {
                       "id": 1,
                       "month": "Juli",
-                      "bill": 30000000,
+                      "year": "2020",
+                      "amount": 30000000,
                       "status": "pending",
                       "_links": {
                         "pay": "https://kost.com/api/bills/1/pay",
@@ -310,7 +311,10 @@
                 "month": {
                   "type": "string"
                 },
-                "bill": {
+                "year": {
+                  "type": "string"
+                },
+                "amount": {
                   "type": "number"
                 },
                 "status": {

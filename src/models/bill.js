@@ -42,7 +42,15 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {
     sequelize,
-    modelName: 'Bill',
+    modelName: 'Bill'
+  });
+
+  Bill.prototype.__defineGetter__('month', function () {
+    return this.date.getMonth() + 1;
+  });
+
+  Bill.prototype.__defineGetter__('year', function () {
+    return this.date.getFullYear();
   });
 
   Bill.associate = (models) => {

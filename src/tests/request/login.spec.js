@@ -64,7 +64,6 @@ describe("Login request test", () => {
             });
 
             expect(response.status).toEqual(400);
-            console.log(response.body);
             expect(response.body).toEqual({
                 success: false,
                 data: null,

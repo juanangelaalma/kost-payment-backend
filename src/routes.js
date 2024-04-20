@@ -8,6 +8,7 @@ const routes = (app) => {
   app.post('/api/login', validateRequest(LoginSchema.createLoginSchema), UserController.loginHandler)
 
   app.get('/api/total-bills', requireUser, BillController.getTotalBillsHandler)
+  app.get('/api/bills', requireUser, BillController.getBillsUserHandler)
 }
 
 module.exports = routes

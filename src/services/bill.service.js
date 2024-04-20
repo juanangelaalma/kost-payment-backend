@@ -1,5 +1,5 @@
 const { Op } = require("sequelize")
-const { Bill, Payment, Sequelize } = require("../models")
+const { Bill, Payment } = require("../models")
 
 const getTotalBillsUser = async (user) => {
   const bills = await Bill.findAll({
@@ -26,8 +26,24 @@ const getTotalBillsUser = async (user) => {
   return total
 }
 
+const getBillsUser = (user) => {
+  return Bill.findAll({
+    where: {
+      userId: user.id
+    },
+    include: [
+      {
+        model: Payment,
+        required: false,
+        as: 'payments',
+      },
+    ],
+  })
+}
+
 const BillService = {
-  getTotalBillsUser
+  getTotalBillsUser,
+  getBillsUser
 }
 
 module.exports = BillService
