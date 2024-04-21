@@ -8,14 +8,13 @@ const PaymentFactory = require("../../factories/payment.factory");
 
 describe("Pay request test", () => {
   afterEach(async () => {
-    await truncateTables();
   });
 
   afterAll((done) => {
     server.close(done)
   })
 
-  describe('/api/total-bills', () => {
+  describe('/api/bills/:id/pay', () => {
     describe('does not containt paymentMethod', () => {
       it('should response with 400 Bad Request', async () => {
         const user = await UserFactory.createRandomUser();
@@ -124,8 +123,6 @@ describe("Pay request test", () => {
           .set('password', user.password)
           .send({ paymentMethod: 'bni' })
 
-        console.log(response.body)
-
         expect(response.status).toEqual(201);
         expect(response.body.success).toEqual(true);
         expect(response.body.data.invoice).toBeDefined();
@@ -133,6 +130,104 @@ describe("Pay request test", () => {
         expect(response.body.data._links).toEqual({
           "instruction": `/api/payments/${response.body.data.invoice}`,
         });
+      })
+    })
+  })
+
+  describe('/api/payments/:invoice', () => {
+    describe('payment is not found', () => {
+      it('should response with 404 Not Found', async () => {
+        const user = await UserFactory.createRandomUser();
+
+        const response = await request(app)
+          .get(`/api/payments/INV202203011`)
+          .set('email', user.email)
+          .set('password', user.password)
+
+        expect(response.status).toEqual(404);
+        expect(response.body).toEqual({ success: false, data: null, message: 'Payment not found' })
+      })
+    })
+
+    describe('payment is found', () => {
+      it('should response with 200 OK', async () => {
+        const user = await UserFactory.createRandomUser();
+
+        const bill = await BillFactory.createBillUser(user, 400000);
+
+        const bniPaymentMethod = await PaymentMethodFactory.createPaymentMethod({ name: 'bni' });
+
+        // Indonesia Time 21-04-3000 14:00 WIB
+        const deadline = new Date('2030-04-21T14:00:00Z');
+
+        // mengatur ke default UTC
+        const defaultTime = deadline.getUTCHours() - 7;
+        deadline.setUTCHours(defaultTime);
+
+        const payment = await PaymentFactory.createPaymentBill({ bill: bill, paymentMethod: bniPaymentMethod, status: 'pending', deadline })
+
+        const response = await request(app)
+          .get(`/api/payments/${payment.invoice}`)
+          .set('email', user.email)
+          .set('password', user.password)
+
+        expect(response.status).toEqual(200);
+        expect(response.body.success).toEqual(true);
+        expect(response.body.data).toEqual({
+          id: payment.id,
+          invoice: payment.invoice,
+          amount: payment.amount,
+          deadline: 'Minggu, 21 April 2030 14:00 WIB',
+          status: 'pending',
+          payment: {
+            title: bniPaymentMethod.title,
+            logo: bniPaymentMethod.logo,
+            name: bniPaymentMethod.name,
+            vaNumber: payment.vaNumber,
+          }
+        })
+        expect(response.body.message).toBeNull();
+      })
+
+      describe('when payment is expired', () => {
+        it('response with 200 OK but status is failed', async () => {
+          const user = await UserFactory.createRandomUser();
+
+          const bill = await BillFactory.createBillUser(user, 400000);
+
+          const bniPaymentMethod = await PaymentMethodFactory.createPaymentMethod({ name: 'bni' });
+
+          // Indonesia Time 21-04-1999 14:00 WIB
+          const deadline = new Date('1999-04-21T14:00:00Z');
+
+          // mengatur ke default UTC
+          const defaultTime = deadline.getUTCHours() - 7;
+          deadline.setUTCHours(defaultTime);
+
+          const payment = await PaymentFactory.createPaymentBill({ bill: bill, paymentMethod: bniPaymentMethod, status: 'pending', deadline })
+
+          const response = await request(app)
+            .get(`/api/payments/${payment.invoice}`)
+            .set('email', user.email)
+            .set('password', user.password)
+
+          expect(response.status).toEqual(200);
+          expect(response.body.success).toEqual(true);
+          expect(response.body.data).toEqual({
+            id: payment.id,
+            invoice: payment.invoice,
+            amount: payment.amount,
+            deadline: 'Rabu, 21 April 1999 14:00 WIB',
+            status: 'failed',
+            payment: {
+              title: bniPaymentMethod.title,
+              logo: bniPaymentMethod.logo,
+              name: bniPaymentMethod.name,
+              vaNumber: payment.vaNumber,
+            }
+          })
+          expect(response.body.message).toBeNull();
+        })
       })
     })
   })

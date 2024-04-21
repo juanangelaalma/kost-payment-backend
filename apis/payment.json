@@ -187,8 +187,8 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "Sukses mendapatkan riwayat tagihan pengguna",
+          "201": {
+            "description": "Sukses membuat payment",
             "content": {
               "application/json": {
                 "schema": {
@@ -201,6 +201,50 @@
                     "status": "pending",
                     "_links": {
                       "instruction": "/api/payments/INV0844050"
+                    }
+                  },
+                  "message": ""
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/payments/:invoice": {
+      "get": {
+        "summary": "Endpoints untuk mendapatkan details payment",
+        "parameters": [
+          {
+            "name": "invoice",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "INV121923030"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sukses mendapatkan detail payment",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentInstrunctionResponseSuccess"
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "invoice": "INV129109303",
+                    "amount": "Rp 400.000,00",
+                    "deadline": "Selasa, 19 Juli 2023 18:00 WIB",
+                    "sttaus": "pending",
+                    "payment": {
+                      "title": "BNI Virtual Account",
+                      "logo": "https://bni.com/logo.png",
+                      "name": "BNI",
+                      "vaNumber": "6387498239400"
                     }
                   },
                   "message": ""

@@ -1,5 +1,5 @@
 const BankTransfer = require("../payments/BankTransfer")
-const { Payment } = require('../models')
+const { Payment, PaymentMethod, Bill } = require('../models')
 
 const createPaymentMidtrans = async ({ invoice, amount, paymentMethod, userEmail, userName }) => {
   const itemDetails = {
@@ -62,9 +62,31 @@ const createPayment = async ({ billId, paymentMethodId, invoice, amount, vaNumbe
   })
 }
 
+const getPayment = async (invoice, userId) => {
+  return Payment.findOne({
+    where: {
+      invoice,
+      '$bill.userId$': userId
+    },
+    include: [
+      {
+        model: PaymentMethod,
+        as: 'paymentMethod',
+        attributes: ['title', 'logo', 'name']
+      },
+      {
+        model: Bill,
+        as: 'bill',
+        where: { userId }
+      }
+    ]
+  });
+}
+
 const PaymentService = {
   createPaymentMidtrans,
-  createPayment
+  createPayment,
+  getPayment
 }
 
 module.exports = PaymentService

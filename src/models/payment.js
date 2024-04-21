@@ -4,11 +4,6 @@ const {
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Payment extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
       // define association here
     }
@@ -45,7 +40,14 @@ module.exports = (sequelize, DataTypes) => {
     status: {
       type: DataTypes.ENUM('pending', 'failed', 'paid'),
       allowNull: false,
-      defaultValue: 'pending'
+      defaultValue: 'pending',
+      get() {
+        if (this.deadline < new Date()) {
+          return 'failed';
+        } else {
+          return this.getDataValue('status');
+        }
+      }
     },
     vaNumber: {
       type: DataTypes.STRING,
@@ -74,6 +76,7 @@ module.exports = (sequelize, DataTypes) => {
 
   Payment.associate = (models) => {
     Payment.belongsTo(models.Bill, { as: 'bill', foreignKey: 'billId' });
+    Payment.belongsTo(models.PaymentMethod, { as: 'paymentMethod', foreignKey: 'paymentMethodId' });
   }
 
   return Payment;
