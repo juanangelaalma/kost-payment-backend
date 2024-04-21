@@ -200,7 +200,7 @@
                     "invoice": "INV0844050",
                     "status": "pending",
                     "_links": {
-                      "instruction": "/api/payments/INV0844050/instruction"
+                      "instruction": "/api/payments/INV0844050"
                     }
                   },
                   "message": ""

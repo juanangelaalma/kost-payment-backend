@@ -113,7 +113,7 @@ const payBillHandler = async (req, res) => {
       invoice,
       status: 'pending',
       _links: {
-        instruction: `/api/payments/${invoice}/instruction`,
+        instruction: `/api/payments/${invoice}`,
       }
     }
 
