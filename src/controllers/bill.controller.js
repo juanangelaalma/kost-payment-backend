@@ -35,8 +35,7 @@ const getBillsUserHandler = async (req, res) => {
         amount: formatCurrency(bill.amount),
         status: getBillStatus(bill),
         _links: {
-          pay: `/api/bills/${bill.id}/pay`,
-          details: `/api/bills/${bill.id}/details`,
+          pay: `/api/bills/${bill.id}/pay`
         }
       }
     })

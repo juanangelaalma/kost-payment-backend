@@ -158,8 +158,7 @@ describe("Bills request test", () => {
               amount: "Rp 200.000,00",
               status: "unpaid",
               _links: {
-                pay: `/api/bills/${bill2.id}/pay`,
-                details: `/api/bills/${bill2.id}/details`
+                pay: `/api/bills/${bill2.id}/pay`
               }
             },
             {
@@ -169,8 +168,7 @@ describe("Bills request test", () => {
               amount: "Rp 100.000,00",
               status: "unpaid",
               _links: {
-                pay: `/api/bills/${bill1.id}/pay`,
-                details: `/api/bills/${bill1.id}/details`
+                pay: `/api/bills/${bill1.id}/pay`
               }
             },
           ],
@@ -210,8 +208,7 @@ describe("Bills request test", () => {
               amount: "Rp 400.000,00",
               status: "unpaid",
               _links: {
-                pay: `/api/bills/${bill4.id}/pay`,
-                details: `/api/bills/${bill4.id}/details`
+                pay: `/api/bills/${bill4.id}/pay`
               }
             },
             {
@@ -221,8 +218,7 @@ describe("Bills request test", () => {
               amount: "Rp 300.000,00",
               status: "paid",
               _links: {
-                pay: `/api/bills/${bill3.id}/pay`,
-                details: `/api/bills/${bill3.id}/details`
+                pay: `/api/bills/${bill3.id}/pay`
               }
             },
             {
@@ -232,8 +228,7 @@ describe("Bills request test", () => {
               amount: "Rp 200.000,00",
               status: "pending",
               _links: {
-                pay: `/api/bills/${bill2.id}/pay`,
-                details: `/api/bills/${bill2.id}/details`
+                pay: `/api/bills/${bill2.id}/pay`
               }
             },
             {
@@ -243,8 +238,7 @@ describe("Bills request test", () => {
               amount: "Rp 100.000,00",
               status: "paid",
               _links: {
-                pay: `/api/bills/${bill1.id}/pay`,
-                details: `/api/bills/${bill1.id}/details`
+                pay: `/api/bills/${bill1.id}/pay`
               }
             },
           ],
@@ -284,8 +278,7 @@ describe("Bills request test", () => {
                 amount: "Rp 400.000,00",
                 status: "unpaid",
                 _links: {
-                  pay: `/api/bills/${bill4.id}/pay`,
-                  details: `/api/bills/${bill4.id}/details`
+                  pay: `/api/bills/${bill4.id}/pay`
                 }
               },
               {
@@ -295,8 +288,7 @@ describe("Bills request test", () => {
                 amount: "Rp 300.000,00",
                 status: "paid",
                 _links: {
-                  pay: `/api/bills/${bill3.id}/pay`,
-                  details: `/api/bills/${bill3.id}/details`
+                  pay: `/api/bills/${bill3.id}/pay`
                 }
               },
               {
@@ -306,8 +298,7 @@ describe("Bills request test", () => {
                 amount: "Rp 100.000,00",
                 status: "paid",
                 _links: {
-                  pay: `/api/bills/${bill1.id}/pay`,
-                  details: `/api/bills/${bill1.id}/details`
+                  pay: `/api/bills/${bill1.id}/pay`
                 }
               },
             ],
@@ -348,8 +339,7 @@ describe("Bills request test", () => {
                 amount: "Rp 400.000,00",
                 status: "unpaid",
                 _links: {
-                  pay: `/api/bills/${bill4.id}/pay`,
-                  details: `/api/bills/${bill4.id}/details`
+                  pay: `/api/bills/${bill4.id}/pay`
                 }
               },
               {
@@ -359,8 +349,7 @@ describe("Bills request test", () => {
                 amount: "Rp 300.000,00",
                 status: "paid",
                 _links: {
-                  pay: `/api/bills/${bill3.id}/pay`,
-                  details: `/api/bills/${bill3.id}/details`
+                  pay: `/api/bills/${bill3.id}/pay`
                 }
               },
             ],
@@ -401,8 +390,7 @@ describe("Bills request test", () => {
                 amount: "Rp 300.000,00",
                 status: "paid",
                 _links: {
-                  pay: `/api/bills/${bill3.id}/pay`,
-                  details: `/api/bills/${bill3.id}/details`
+                  pay: `/api/bills/${bill3.id}/pay`
                 }
               },
             ],
