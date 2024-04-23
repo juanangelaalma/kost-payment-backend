@@ -15,17 +15,16 @@ class BankTransfer extends MidtransRequest {
             },
             item_details: this.item_details,
             customer_details: this.customer_details,
-            expiry: {
+            custom_expiry: {
                 unit: process.env.PAYMENT_EXPIRY_UNIT,
-                duration: process.env.PAYMENT_EXPIRY_DURATION
+                expiry_duration: process.env.PAYMENT_EXPIRY_DURATION
             }
         }
 
         if(this.bank === "echannel") {
             params.payment_type = "echannel"
             params.echannel = {
-                "bill_info1" : "Pembayaran: Donasi di AyoDonasi",
-                "bill_info2" : "Terima kasih telah berdonasi"
+                "bill_info1" : "Pembayaran Tagihan"
             }
         }else {
             params.bank_transfer = {
