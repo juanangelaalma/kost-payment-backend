@@ -5,6 +5,7 @@ const PaymentService = require("../services/payment.service")
 const createApiResponse = require("../utils/createApiResponse")
 const formatCurrency = require("../utils/formatCurrency")
 const generateInvoiceNumber = require("../utils/generateInvoiceNumber")
+const getBillStatus = require("../tests/utils/getBillStatus")
 
 const getTotalBillsHandler = async (req, res) => {
   const user = res.locals.user
@@ -18,17 +19,6 @@ const getTotalBillsHandler = async (req, res) => {
   } catch (error) {
     return res.status(500).send(createApiResponse(false, null, error.message))
   }
-}
-
-const getBillStatus = (bill) => {
-  if (bill.payments.length === 0) {
-    return 'unpaid'
-  }
-  if (bill.payments.some(payment => payment.status === 'paid')) {
-    return 'paid'
-  }
-
-  return bill.payments[0].status
 }
 
 const getBillsUserHandler = async (req, res) => {

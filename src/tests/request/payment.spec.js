@@ -7,9 +7,6 @@ const PaymentMethodFactory = require("../../factories/payment-method.factory");
 const PaymentFactory = require("../../factories/payment.factory");
 
 describe("Pay request test", () => {
-  afterEach(async () => {
-  });
-
   afterAll((done) => {
     server.close(done)
   })

@@ -1,5 +1,6 @@
 const BankTransfer = require("../payments/BankTransfer")
 const { Payment, PaymentMethod, Bill } = require('../models')
+const { where } = require("sequelize")
 
 const createPaymentMidtrans = async ({ invoice, amount, paymentMethod, userEmail, userName }) => {
   const itemDetails = {
@@ -83,10 +84,29 @@ const getPayment = async (invoice, userId) => {
   });
 }
 
+const getPaymentById = (id) => {
+  return Payment.findByPk(id)
+}
+
+const getPaymentByInvoice = (invoice) => {
+  return Payment.findOne({
+    where: {
+      invoice
+    }
+  })
+}
+
+const getPayments = () => {
+  return Payment.findAll()
+}
+
 const PaymentService = {
   createPaymentMidtrans,
   createPayment,
-  getPayment
+  getPayment,
+  getPaymentById,
+  getPaymentByInvoice,
+  getPayments
 }
 
 module.exports = PaymentService
