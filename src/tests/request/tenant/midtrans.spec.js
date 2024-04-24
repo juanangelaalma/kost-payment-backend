@@ -1,13 +1,13 @@
 const request = require("supertest");
-const { app, server } = require("../../app");
-const BillFactory = require("../../factories/bill.factory")
-const PaymentMethodFactory = require("../../factories/payment-method.factory")
-const PaymentFactory = require("../../factories/payment.factory")
-const UserFactory = require("../../factories/user.factory")
-const BillService = require("../../services/bill.service")
-const getBillStatus = require("../utils/getBillStatus");
-const PaymentService = require("../../services/payment.service");
-const truncateTables = require("../../utils/truncateTables");
+const { app, server } = require("../../../app");
+const BillFactory = require("../../../factories/bill.factory")
+const PaymentMethodFactory = require("../../../factories/payment-method.factory")
+const PaymentFactory = require("../../../factories/payment.factory")
+const UserFactory = require("../../../factories/user.factory")
+const BillService = require("../../../services/bill.service")
+const getBillStatus = require("../../utils/getBillStatus");
+const PaymentService = require("../../../services/payment.service");
+const truncateTables = require("../../../utils/truncateTables");
 
 function parseDateTimeToISO(dateTimeString) {
   const isoDateString = dateTimeString.replace(' ', 'T') + 'Z';

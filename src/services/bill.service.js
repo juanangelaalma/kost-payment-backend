@@ -55,10 +55,31 @@ const getBillById = (id) => {
   })
 }
 
+const getCountBills = async () => {
+  const total = await Bill.count({
+    where: {
+      [Op.or]: [
+        { '$payments.id$': null },
+        { '$payments.status$': { [Op.not]: 'paid' } }
+      ]
+    },
+    include: [
+      {
+        model: Payment,
+        required: false,
+        as: 'payments',
+      },
+    ],
+  })
+
+  return total
+}
+
 const BillService = {
   getTotalBillsUser,
   getBillsUser,
-  getBillById
+  getBillById,
+  getCountBills
 }
 
 module.exports = BillService

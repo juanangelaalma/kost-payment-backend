@@ -1,8 +1,8 @@
 const request = require("supertest");
-const {app, server} = require("../../app");
-const { User, sequelize } = require("../../models");
-const truncateTables = require("../../utils/truncateTables");
-const UserFactory = require("../../factories/user.factory");
+const {app, server} = require("../../../app");
+const { User, sequelize } = require("../../../models");
+const truncateTables = require("../../../utils/truncateTables");
+const UserFactory = require("../../../factories/user.factory");
 
 describe("Login request test", () => {
     afterEach((done) => {

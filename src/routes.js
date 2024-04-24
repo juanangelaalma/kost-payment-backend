@@ -6,6 +6,7 @@ const requireUser = require("./middlewares/requireUser")
 const BillController = require("./controllers/bill.controller")
 const PaymentController = require("./controllers/payment.controller")
 const MidtransController = require("./controllers/midtrans.controller")
+const requireAdmin = require("./middlewares/requireAdmin")
 
 const routes = (app) => {
   app.post('/api/login', validateRequest(LoginSchema.createLoginSchema), UserController.loginHandler)
@@ -18,6 +19,8 @@ const routes = (app) => {
   app.get('/api/payments/:invoice', requireUser, PaymentController.getPaymentHandler)
 
   app.post('/api/midtrans-notification', MidtransController.notificationHandler)
+
+  app.get('/api/admin/count-bills', requireUser, requireAdmin, BillController.countBillsHandler)
 }
 
 module.exports = routes

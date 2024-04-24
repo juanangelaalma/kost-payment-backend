@@ -115,10 +115,20 @@ const payBillHandler = async (req, res) => {
   }
 }
 
+const countBillsHandler = async (req, res) => {
+  try {
+    const total = await BillService.getCountBills()
+    return res.send(createApiResponse(true, { total }, null))
+  } catch (error) {
+    return res.status(500).send(createApiResponse(false, null, error.message))
+  }
+}
+
 const BillController = {
   getTotalBillsHandler,
   getBillsUserHandler,
   payBillHandler,
+  countBillsHandler
 }
 
 module.exports = BillController

@@ -1,10 +1,10 @@
 const request = require("supertest");
-const { app, server } = require("../../app");
-const UserFactory = require("../../factories/user.factory");
-const truncateTables = require("../../utils/truncateTables");
-const BillFactory = require("../../factories/bill.factory");
-const PaymentMethodFactory = require("../../factories/payment-method.factory");
-const PaymentFactory = require("../../factories/payment.factory");
+const { app, server } = require("../../../app");
+const UserFactory = require("../../../factories/user.factory");
+const truncateTables = require("../../../utils/truncateTables");
+const BillFactory = require("../../../factories/bill.factory");
+const PaymentMethodFactory = require("../../../factories/payment-method.factory");
+const PaymentFactory = require("../../../factories/payment.factory");
 
 describe("Pay request test", () => {
   afterAll((done) => {
