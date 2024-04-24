@@ -5,6 +5,7 @@ const truncateTables = require("../../../utils/truncateTables");
 const BillFactory = require("../../../factories/bill.factory");
 const PaymentMethodFactory = require("../../../factories/payment-method.factory");
 const PaymentFactory = require("../../../factories/payment.factory");
+const parseMonth = require("../../../utils/parseMonth");
 
 describe("Bills request test", () => {
   afterEach(async () => {
@@ -153,7 +154,7 @@ describe("Bills request test", () => {
           data: [
             {
               id: bill2.id,
-              month: bill2.month,
+              month: parseMonth(bill2.month),
               year: bill2.year,
               amount: "Rp 200.000,00",
               status: "unpaid",
@@ -163,7 +164,7 @@ describe("Bills request test", () => {
             },
             {
               id: bill1.id,
-              month: bill1.month,
+              month: parseMonth(bill1.month),
               year: bill1.year,
               amount: "Rp 100.000,00",
               status: "unpaid",
@@ -203,7 +204,7 @@ describe("Bills request test", () => {
           data: [
             {
               id: bill4.id,
-              month: bill4.month,
+              month: parseMonth(bill4.month),
               year: bill4.year,
               amount: "Rp 400.000,00",
               status: "unpaid",
@@ -213,7 +214,7 @@ describe("Bills request test", () => {
             },
             {
               id: bill3.id,
-              month: bill3.month,
+              month: parseMonth(bill3.month),
               year: bill3.year,
               amount: "Rp 300.000,00",
               status: "paid",
@@ -223,7 +224,7 @@ describe("Bills request test", () => {
             },
             {
               id: bill2.id,
-              month: bill2.month,
+              month: parseMonth(bill2.month),
               year: bill2.year,
               amount: "Rp 200.000,00",
               status: "pending",
@@ -233,7 +234,7 @@ describe("Bills request test", () => {
             },
             {
               id: bill1.id,
-              month: bill1.month,
+              month: parseMonth(bill1.month),
               year: bill1.year,
               amount: "Rp 100.000,00",
               status: "paid",
@@ -273,7 +274,7 @@ describe("Bills request test", () => {
             data: [
               {
                 id: bill4.id,
-                month: bill4.month,
+                month: parseMonth(bill4.month),
                 year: bill4.year,
                 amount: "Rp 400.000,00",
                 status: "unpaid",
@@ -283,7 +284,7 @@ describe("Bills request test", () => {
               },
               {
                 id: bill3.id,
-                month: bill3.month,
+                month: parseMonth(bill3.month),
                 year: bill3.year,
                 amount: "Rp 300.000,00",
                 status: "paid",
@@ -293,7 +294,7 @@ describe("Bills request test", () => {
               },
               {
                 id: bill1.id,
-                month: bill1.month,
+                month: parseMonth(bill1.month),
                 year: bill1.year,
                 amount: "Rp 100.000,00",
                 status: "paid",
@@ -334,7 +335,7 @@ describe("Bills request test", () => {
             data: [
               {
                 id: bill4.id,
-                month: bill4.month,
+                month: parseMonth(bill4.month),
                 year: bill4.year,
                 amount: "Rp 400.000,00",
                 status: "unpaid",
@@ -344,7 +345,7 @@ describe("Bills request test", () => {
               },
               {
                 id: bill3.id,
-                month: bill3.month,
+                month: parseMonth(bill3.month),
                 year: bill3.year,
                 amount: "Rp 300.000,00",
                 status: "paid",
@@ -385,7 +386,7 @@ describe("Bills request test", () => {
             data: [
               {
                 id: bill3.id,
-                month: bill3.month,
+                month: parseMonth(bill3.month),
                 year: bill3.year,
                 amount: "Rp 300.000,00",
                 status: "paid",

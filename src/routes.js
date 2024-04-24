@@ -21,6 +21,8 @@ const routes = (app) => {
   app.post('/api/midtrans-notification', MidtransController.notificationHandler)
 
   app.get('/api/admin/count-bills', requireUser, requireAdmin, BillController.countBillsHandler)
+
+  app.get('/api/admin/bills', requireUser, requireAdmin, BillController.getBillsAdminHandler)
 }
 
 module.exports = routes

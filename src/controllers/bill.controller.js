@@ -125,11 +125,39 @@ const countBillsHandler = async (req, res) => {
   }
 }
 
+const getBillsAdminHandler = async (req, res) => {
+  try {
+    let unpaidBillsWithRoom = await BillService.getUnpaidBillsWithRoom()
+
+    console.log(req.query.limit)
+
+    if (req.query.limit) {
+      unpaidBillsWithRoom = unpaidBillsWithRoom.slice(0, req.query.limit)
+    }
+
+    const formattedResponse = unpaidBillsWithRoom.map(bill => {
+      return {
+        id: bill.id,
+        roomCode: bill.user.room.code,
+        month: parseMonth(bill.month),
+        year: `${bill.year}`,
+        total: formatCurrency(bill.amount),
+      }
+    })
+
+    return res.send(createApiResponse(true, { bills: formattedResponse }, null))
+  } catch (error) {
+    return res.status(500).send(createApiResponse(false, null, error.message))
+  }
+}
+
+
 const BillController = {
   getTotalBillsHandler,
   getBillsUserHandler,
   payBillHandler,
-  countBillsHandler
+  countBillsHandler,
+  getBillsAdminHandler
 }
 
 module.exports = BillController

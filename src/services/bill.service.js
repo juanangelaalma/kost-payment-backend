@@ -1,6 +1,5 @@
 const { Op } = require("sequelize")
-const { Bill, Payment } = require("../models")
-const { sortBy, orderBy } = require("lodash")
+const { Bill, Payment , User, Room} = require("../models")
 
 const getTotalBillsUser = async (user) => {
   const bills = await Bill.findAll({
@@ -75,11 +74,45 @@ const getCountBills = async () => {
   return total
 }
 
+const getUnpaidBillsWithRoom = async () => {
+  const bills = await Bill.findAll({
+    where: {
+      [Op.or]: [
+        { '$payments.id$': null },
+        { '$payments.status$': { [Op.not]: 'paid' } }
+      ]
+    },
+    include: [
+      {
+        model: Payment,
+        required: false,
+        as: 'payments',
+      },
+      {
+        model: User,
+        required: true,
+        as: 'user',
+        include: [
+          {
+            model: Room,
+            required: true,
+            as: 'room',
+          }
+        ]
+      }
+    ],
+    order: [['date', 'DESC']]
+  })
+
+  return bills
+}
+
 const BillService = {
   getTotalBillsUser,
   getBillsUser,
   getBillById,
-  getCountBills
+  getCountBills,
+  getUnpaidBillsWithRoom
 }
 
 module.exports = BillService
