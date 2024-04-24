@@ -6,6 +6,7 @@ const createApiResponse = require("../utils/createApiResponse")
 const formatCurrency = require("../utils/formatCurrency")
 const generateInvoiceNumber = require("../utils/generateInvoiceNumber")
 const getBillStatus = require("../tests/utils/getBillStatus")
+const parseMonth = require("../utils/parseMonth")
 
 const getTotalBillsHandler = async (req, res) => {
   const user = res.locals.user
@@ -30,7 +31,7 @@ const getBillsUserHandler = async (req, res) => {
     let formattedBills = bills.map((bill) => {
       return {
         id: bill.id,
-        month: bill.month,
+        month: parseMonth(bill.month),
         year: bill.year,
         amount: formatCurrency(bill.amount),
         status: getBillStatus(bill),
