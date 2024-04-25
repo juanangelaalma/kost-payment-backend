@@ -9,6 +9,8 @@ const MidtransController = require("./controllers/midtrans.controller")
 const requireAdmin = require("./middlewares/requireAdmin")
 
 const routes = (app) => {
+  app.get('/health-check', (req, res) => res.send('OK'))
+  
   app.post('/api/login', validateRequest(LoginSchema.createLoginSchema), UserController.loginHandler)
 
   app.get('/api/total-bills', requireUser, BillController.getTotalBillsHandler)
@@ -23,6 +25,7 @@ const routes = (app) => {
   app.get('/api/admin/count-bills', requireUser, requireAdmin, BillController.countBillsHandler)
 
   app.get('/api/admin/bills', requireUser, requireAdmin, BillController.getBillsAdminHandler)
+
 }
 
 module.exports = routes
