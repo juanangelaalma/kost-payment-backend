@@ -6,8 +6,6 @@ const createTenantHandler = async (req, res) => {
   try {
     const { email, name, password, roomCode, startDate } = req.body
 
-    console.log(email, name, password, roomCode, startDate)
-
     const existingTenant = await UserService.getTenantByEmail(email)
     if (existingTenant) {
       return res.status(400).send(createApiResponse(false, null, 'Email sudah digunakan'))
@@ -34,8 +32,26 @@ const createTenantHandler = async (req, res) => {
   }
 }
 
+const deleteTenantHandler = async (req, res) => {
+  try {
+    const { id } = req.params
+
+    const tenant = await UserService.getTenantById(id)
+    if (!tenant) {
+      return res.status(404).send(createApiResponse(false, null, 'Tenant tidak ditemukan'))
+    }
+
+    await UserService.deleteTenantById(id)
+
+    return res.status(200).send(createApiResponse(true, null, 'Tenant berhasil dihapus'))
+  } catch (error) {
+    return res.status(500).send(createApiResponse(false, null, error.message))
+  }
+}
+
 const TenantController = {
-  createTenantHandler
+  createTenantHandler,
+  deleteTenantHandler
 }
 
 module.exports = TenantController
