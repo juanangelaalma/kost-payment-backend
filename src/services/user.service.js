@@ -39,11 +39,25 @@ const createTenant = async (data) => {
   })
 }
 
+const getTenantById = async (id) => {
+  return User.findByPk(id)
+}
+
+const deleteTenantById = async (id) => {
+  return User.destroy({
+    where: {
+      id
+    }
+  })
+}
+
 const UserService = {
   findByEmailPassword,
   getTenantByEmail,
   createTenant,
-  getTenantByEmailIncludeRoom
+  getTenantByEmailIncludeRoom,
+  getTenantById,
+  deleteTenantById
 }
 
 module.exports = UserService

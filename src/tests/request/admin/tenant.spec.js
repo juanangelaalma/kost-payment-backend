@@ -1,10 +1,10 @@
 const request = require("supertest");
 const { app, server } = require("../../../app");
-const { Tenant } = require("../../../models");
 const truncateTables = require("../../../utils/truncateTables");
 const UserFactory = require("../../../factories/user.factory");
 const UserService = require("../../../services/user.service");
 const RoomFactory = require("../../../factories/room.factory");
+const RoomService = require("../../../services/room.service");
 
 describe('manage tenants', () => {
   afterEach(async () => {
@@ -165,6 +165,44 @@ describe('manage tenants', () => {
           expect(response.status).toBe(400)
           expect(response.body.success).toBe(false)
           expect(response.body.message).toBe('Email wajib diisi')
+        })
+      })
+    })
+  })
+
+  describe('DELETE /api/admin/tenants/:id', () => {
+    it('should return 200 OK', async () => {
+      const tenant = await UserFactory.createRandomUser({ role: 'tenant' })
+      const room = await RoomFactory.createRoomUser({ user: tenant, code: 'A1' })
+
+      const admin = await UserFactory.createRandomUser({ role: 'admin' })
+
+      const response = await request(app).delete(`/api/admin/tenants/${tenant.id}`)
+        .set('email', admin.email)
+        .set('password', admin.password)
+
+      expect(response.status).toBe(200)
+      expect(response.body.success).toBe(true)
+
+      const deletedTenant = await UserService.getTenantByEmail(tenant.email)
+      expect(deletedTenant).toBeNull()
+      
+      const deletedRoom = await RoomService.getRoomByCode(room.code)
+      expect(deletedRoom).toBeNull()
+    })
+
+    describe('404', () => {
+      describe('when tenant is not found', () => {
+        it('should return 404 Bad Request', async () => {
+          const admin = await UserFactory.createRandomUser({ role: 'admin' })
+
+          const response = await request(app).delete(`/api/admin/tenants/1`)
+            .set('email', admin.email)
+            .set('password', admin.password)
+
+          expect(response.status).toBe(404)
+          expect(response.body.success).toBe(false)
+          expect(response.body.message).toBe('Tenant tidak ditemukan')
         })
       })
     })
