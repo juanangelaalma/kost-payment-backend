@@ -29,12 +29,17 @@ const getBillsUserHandler = async (req, res) => {
     const bills = await BillService.getBillsUser(user)
 
     let formattedBills = bills.map((bill) => {
+      const paidOrPendingPayments = bill.payments.filter((payment) => {
+        return payment.status === 'paid' || payment.status === 'pending'
+      })
+
       return {
         id: bill.id,
         month: parseMonth(bill.month),
         year: bill.year,
         amount: formatCurrency(bill.amount),
         status: getBillStatus(bill),
+        invoice: paidOrPendingPayments.length > 0 ? paidOrPendingPayments[0].invoice : null,
         _links: {
           pay: `/api/bills/${bill.id}/pay`
         }

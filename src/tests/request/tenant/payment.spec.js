@@ -5,6 +5,7 @@ const truncateTables = require("../../../utils/truncateTables");
 const BillFactory = require("../../../factories/bill.factory");
 const PaymentMethodFactory = require("../../../factories/payment-method.factory");
 const PaymentFactory = require("../../../factories/payment.factory");
+const formatCurrency = require("../../../utils/formatCurrency");
 
 describe("Pay request test", () => {
   afterAll((done) => {
@@ -173,8 +174,9 @@ describe("Pay request test", () => {
         expect(response.body.data).toEqual({
           id: payment.id,
           invoice: payment.invoice,
-          amount: payment.amount,
-          deadline: 'Minggu, 21 April 2030 14:00 WIB',
+          amount: formatCurrency(payment.amount),
+          formattedDeadline: 'Minggu, 21 April 2030 14:00 WIB',
+          deadline: '2030-04-21T07:00:00.000Z',
           status: 'pending',
           payment: {
             title: bniPaymentMethod.title,
@@ -213,8 +215,9 @@ describe("Pay request test", () => {
           expect(response.body.data).toEqual({
             id: payment.id,
             invoice: payment.invoice,
-            amount: payment.amount,
-            deadline: 'Rabu, 21 April 1999 14:00 WIB',
+            amount: formatCurrency(payment.amount),
+            deadline: '1999-04-21T07:00:00.000Z',
+            formattedDeadline: 'Rabu, 21 April 1999 14:00 WIB',
             status: 'failed',
             payment: {
               title: bniPaymentMethod.title,

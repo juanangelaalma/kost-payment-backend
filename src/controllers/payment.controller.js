@@ -1,5 +1,6 @@
 const PaymentService = require("../services/payment.service")
 const createApiResponse = require("../utils/createApiResponse")
+const formatCurrency = require("../utils/formatCurrency")
 const formatTimestamp = require("../utils/formatTimestamp")
 
 const getPaymentHandler = async (req, res) => {
@@ -16,8 +17,9 @@ const getPaymentHandler = async (req, res) => {
     const formattedPayment = {
       id: payment.id,
       invoice: payment.invoice,
-      amount: payment.amount,
-      deadline: formatTimestamp(payment.deadline),
+      amount: formatCurrency(payment.amount),
+      formattedDeadline: formatTimestamp(payment.deadline),
+      deadline: payment.deadline,
       status: payment.status,
       payment: {
         title: payment.paymentMethod.title,
