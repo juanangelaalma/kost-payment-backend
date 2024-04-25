@@ -154,6 +154,7 @@ describe("Bills request test", () => {
           data: [
             {
               id: bill2.id,
+              invoice: null,
               month: parseMonth(bill2.month),
               year: bill2.year,
               amount: "Rp 200.000,00",
@@ -164,6 +165,7 @@ describe("Bills request test", () => {
             },
             {
               id: bill1.id,
+              invoice: null,
               month: parseMonth(bill1.month),
               year: bill1.year,
               amount: "Rp 100.000,00",
@@ -190,7 +192,7 @@ describe("Bills request test", () => {
         const paymentMethod = await PaymentMethodFactory.createPaymentMethod()
         const payment1 = await PaymentFactory.createPaymentBill({ bill: bill1, paymentMethod, status: 'paid', paidAt: new Date() })
         const payment2 = await PaymentFactory.createPaymentBill({ bill: bill2, paymentMethod, status: 'pending' })
-        const payment3 = await PaymentFactory.createPaymentBill({ bill: bill3, paymentMethod, status: 'pending' })
+        const payment3 = await PaymentFactory.createPaymentBill({ bill: bill3, paymentMethod, status: 'failed' })
         const payment3_1 = await PaymentFactory.createPaymentBill({ bill: bill3, paymentMethod, status: 'paid' })
 
         const response = await request(app)
@@ -204,6 +206,7 @@ describe("Bills request test", () => {
           data: [
             {
               id: bill4.id,
+              invoice: null,
               month: parseMonth(bill4.month),
               year: bill4.year,
               amount: "Rp 400.000,00",
@@ -214,6 +217,7 @@ describe("Bills request test", () => {
             },
             {
               id: bill3.id,
+              invoice: payment3_1.invoice,
               month: parseMonth(bill3.month),
               year: bill3.year,
               amount: "Rp 300.000,00",
@@ -224,6 +228,7 @@ describe("Bills request test", () => {
             },
             {
               id: bill2.id,
+              invoice: payment2.invoice,
               month: parseMonth(bill2.month),
               year: bill2.year,
               amount: "Rp 200.000,00",
@@ -234,6 +239,7 @@ describe("Bills request test", () => {
             },
             {
               id: bill1.id,
+              invoice: payment1.invoice,
               month: parseMonth(bill1.month),
               year: bill1.year,
               amount: "Rp 100.000,00",
@@ -259,7 +265,7 @@ describe("Bills request test", () => {
           const paymentMethod = await PaymentMethodFactory.createPaymentMethod()
           const payment1 = await PaymentFactory.createPaymentBill({ bill: bill1, paymentMethod, status: 'paid', paidAt: new Date() })
           const payment2 = await PaymentFactory.createPaymentBill({ bill: bill2, paymentMethod, status: 'pending' })
-          const payment3 = await PaymentFactory.createPaymentBill({ bill: bill3, paymentMethod, status: 'pending' })
+          const payment3 = await PaymentFactory.createPaymentBill({ bill: bill3, paymentMethod, status: 'failed' })
           const payment3_1 = await PaymentFactory.createPaymentBill({ bill: bill3, paymentMethod, status: 'paid' })
 
           const response = await request(app)
@@ -274,6 +280,7 @@ describe("Bills request test", () => {
             data: [
               {
                 id: bill4.id,
+                invoice: null,
                 month: parseMonth(bill4.month),
                 year: bill4.year,
                 amount: "Rp 400.000,00",
@@ -284,6 +291,7 @@ describe("Bills request test", () => {
               },
               {
                 id: bill3.id,
+                invoice: payment3_1.invoice,
                 month: parseMonth(bill3.month),
                 year: bill3.year,
                 amount: "Rp 300.000,00",
@@ -294,6 +302,7 @@ describe("Bills request test", () => {
               },
               {
                 id: bill1.id,
+                invoice: payment1.invoice,
                 month: parseMonth(bill1.month),
                 year: bill1.year,
                 amount: "Rp 100.000,00",
@@ -320,7 +329,7 @@ describe("Bills request test", () => {
           const paymentMethod = await PaymentMethodFactory.createPaymentMethod()
           const payment1 = await PaymentFactory.createPaymentBill({ bill: bill1, paymentMethod, status: 'paid', paidAt: new Date() })
           const payment2 = await PaymentFactory.createPaymentBill({ bill: bill2, paymentMethod, status: 'pending' })
-          const payment3 = await PaymentFactory.createPaymentBill({ bill: bill3, paymentMethod, status: 'pending' })
+          const payment3 = await PaymentFactory.createPaymentBill({ bill: bill3, paymentMethod, status: 'failed' })
           const payment3_1 = await PaymentFactory.createPaymentBill({ bill: bill3, paymentMethod, status: 'paid' })
 
           const response = await request(app)
@@ -335,6 +344,7 @@ describe("Bills request test", () => {
             data: [
               {
                 id: bill4.id,
+                invoice: null,
                 month: parseMonth(bill4.month),
                 year: bill4.year,
                 amount: "Rp 400.000,00",
@@ -345,6 +355,7 @@ describe("Bills request test", () => {
               },
               {
                 id: bill3.id,
+                invoice: payment3_1.invoice,
                 month: parseMonth(bill3.month),
                 year: bill3.year,
                 amount: "Rp 300.000,00",
@@ -371,7 +382,7 @@ describe("Bills request test", () => {
           const paymentMethod = await PaymentMethodFactory.createPaymentMethod()
           const payment1 = await PaymentFactory.createPaymentBill({ bill: bill1, paymentMethod, status: 'paid', paidAt: new Date() })
           const payment2 = await PaymentFactory.createPaymentBill({ bill: bill2, paymentMethod, status: 'pending' })
-          const payment3 = await PaymentFactory.createPaymentBill({ bill: bill3, paymentMethod, status: 'pending' })
+          const payment3 = await PaymentFactory.createPaymentBill({ bill: bill3, paymentMethod, status: 'failed' })
           const payment3_1 = await PaymentFactory.createPaymentBill({ bill: bill3, paymentMethod, status: 'paid' })
 
           const response = await request(app)
@@ -386,6 +397,7 @@ describe("Bills request test", () => {
             data: [
               {
                 id: bill3.id,
+                invoice: payment3_1.invoice,
                 month: parseMonth(bill3.month),
                 year: bill3.year,
                 amount: "Rp 300.000,00",
