@@ -14,7 +14,11 @@ const config = {
     database: 'kost-payment-app-database',
     host: process.env.AZURE_MYSQL_HOST,
     port: process.env.AZURE_MYSQL_PORT,
-    dialect: "mysql"
+    dialect: "mysql",
+    ssl: {
+      require: true,
+      rejectUnauthorized: false,
+    },
   },
   production: {
     username: process.env.AZURE_MYSQL_USER,
@@ -22,7 +26,11 @@ const config = {
     database: 'kost-payment-app-database',
     host: process.env.AZURE_MYSQL_HOST,
     port: process.env.AZURE_MYSQL_PORT,
-    dialect: "mysql"
+    dialect: "mysql",
+    ssl: {
+      require: true,
+      rejectUnauthorized: false,
+    },
   }
 }
 
