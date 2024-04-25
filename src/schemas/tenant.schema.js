@@ -6,7 +6,7 @@ const createTenantSchema = object({
     name: string().required('Nama wajib diisi'),
     password: string().required('Password wajib diisi'),
     roomCode: string().required('Kode kamar wajib diisi'),
-    startDate: string().required('Tanggal mulai sewa wajib diisi')
+    startDate: string()
   })
 })
 

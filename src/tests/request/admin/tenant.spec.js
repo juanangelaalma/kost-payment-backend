@@ -44,27 +44,56 @@ describe('manage tenants', () => {
       expect(newTenant.room.startDate).toBe(tenantData.startDate)
     })
 
-    describe('400', () => {
-      describe('when email is not valid', () => {
-        it('should return 400 Bad Request', async () => {
-          const tenantData = {
-            name: 'Tenant 1',
-            email: 'invaalidemail',
-            password: 'password',
-            roomCode: 'A1',
-            startDate: '2022-01-01',
-          }
+    describe('when startDate is null', () => {
+      it('should return 201 Created', async () => {
+        const tenantData = {
+          name: 'Tenant 1',
+          email: 'tenant@gmail.com',
+          password: 'password',
+          roomCode: 'A1',
+        }
 
-          const admin = await UserFactory.createRandomUser({ role: 'admin' })
+        const admin = await UserFactory.createRandomUser({ role: 'admin' })
 
-          const response = await request(app).post('/api/admin/tenants')
-            .send(tenantData)
-            .set('email', admin.email)
-            .set('password', admin.password)
+        const response = await request(app).post('/api/admin/tenants')
+          .send(tenantData)
+          .set('email', admin.email)
+          .set('password', admin.password)
 
-          expect(response.status).toBe(400)
-          expect(response.body.success).toBe(false)
-          expect(response.body.message).toBe('Email tidak valid')
+        expect(response.status).toBe(201)
+        expect(response.body.success).toBe(true)
+
+        const newTenant = await UserService.getTenantByEmailIncludeRoom(tenantData.email)
+
+        expect(newTenant).not.toBeNull()
+        expect(newTenant.name).toBe(tenantData.name)
+        expect(newTenant.email).toBe(tenantData.email)
+        expect(newTenant.room.code).toBe(tenantData.roomCode)
+        expect(newTenant.room.startDate).not.toBe(null)
+      })
+
+      describe('400', () => {
+        describe('when email is not valid', () => {
+          it('should return 400 Bad Request', async () => {
+            const tenantData = {
+              name: 'Tenant 1',
+              email: 'invaalidemail',
+              password: 'password',
+              roomCode: 'A1',
+              startDate: '2022-01-01',
+            }
+
+            const admin = await UserFactory.createRandomUser({ role: 'admin' })
+
+            const response = await request(app).post('/api/admin/tenants')
+              .send(tenantData)
+              .set('email', admin.email)
+              .set('password', admin.password)
+
+            expect(response.status).toBe(400)
+            expect(response.body.success).toBe(false)
+            expect(response.body.message).toBe('Email tidak valid')
+          })
         })
       })
 
