@@ -7,6 +7,8 @@ const BillController = require("./controllers/bill.controller")
 const PaymentController = require("./controllers/payment.controller")
 const MidtransController = require("./controllers/midtrans.controller")
 const requireAdmin = require("./middlewares/requireAdmin")
+const TenantSchema = require("./schemas/tenant.schema")
+const TenantController = require("./controllers/tenant.controller")
 
 const routes = (app) => {
   app.get('/health-check', (req, res) => res.send('OK'))
@@ -26,6 +28,7 @@ const routes = (app) => {
 
   app.get('/api/admin/bills', requireUser, requireAdmin, BillController.getBillsAdminHandler)
 
+  app.post('/api/admin/tenants', requireUser, requireAdmin, validateRequest(TenantSchema.createTenantSchema), TenantController.createTenantHandler)
 }
 
 module.exports = routes
