@@ -1,5 +1,5 @@
 const { Op } = require("sequelize")
-const { Bill, Payment , User, Room} = require("../models")
+const { Bill, Payment, User, Room } = require("../models")
 
 const getTotalBillsUser = async (user) => {
   const bills = await Bill.findAll({
@@ -107,12 +107,19 @@ const getUnpaidBillsWithRoom = async () => {
   return bills
 }
 
+const createBillUser = async (userId, amount, date) => Bill.create({
+  userId: userId,
+  amount,
+  date
+})
+
 const BillService = {
   getTotalBillsUser,
   getBillsUser,
   getBillById,
   getCountBills,
-  getUnpaidBillsWithRoom
+  getUnpaidBillsWithRoom,
+  createBillUser
 }
 
 module.exports = BillService

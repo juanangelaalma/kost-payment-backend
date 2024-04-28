@@ -9,6 +9,7 @@ const PORT = process.env.PORT || 3000
 const db = require('./models')
 const routes = require('./routes')
 const deserializeUser = require('./middlewares/deserializeUser')
+const JobRunner = require('./jobs/JobRunner')
 
 app.use(bodyParser.json())
 app.use(cors())
@@ -18,6 +19,7 @@ app.use(deserializeUser)
 routes(app)
 
 const server = app.listen(PORT, () => {
+  new JobRunner()
   db.sequelize.sync().then(() => {
     console.log('Database connected')
   })
