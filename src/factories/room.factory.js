@@ -8,8 +8,15 @@ const createRoomUser = ({ user, code }) => {
   })
 }
 
+const createRoom = (code) => {
+  return Room.create({
+    code: code || faker.random.alphaNumeric(6)
+  })
+}
+
 const RoomFactory = {
-  createRoomUser
+  createRoomUser,
+  createRoom
 }
 
 module.exports = RoomFactory

@@ -24,10 +24,15 @@ const getRoomsStartingFromToday = async (currentDate) => {
   })
 }
 
+const getAllRooms = async () => {
+  return Room.findAll()
+}
+
 const RoomService = {
   getRoomByCode,
   createRoom,
-  getRoomsStartingFromToday
+  getRoomsStartingFromToday,
+  getAllRooms
 }
 
 module.exports = RoomService

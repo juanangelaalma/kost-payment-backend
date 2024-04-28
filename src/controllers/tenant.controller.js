@@ -22,8 +22,7 @@ const createTenantHandler = async (req, res) => {
 
     const room = await RoomService.createRoom({
       code: roomCode,
-      userId: newTenant.id,
-      startDate
+      userId: newTenant.id
     })
 
     return res.status(201).send(createApiResponse(true, { ...newTenant.dataValues, roomCode: room.code, startDate: room.startDate }, 'Tenant berhasil dibuat'))

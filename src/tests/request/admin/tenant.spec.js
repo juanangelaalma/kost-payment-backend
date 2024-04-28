@@ -187,8 +187,8 @@ describe('manage tenants', () => {
       const deletedTenant = await UserService.getTenantByEmail(tenant.email)
       expect(deletedTenant).toBeNull()
       
-      const deletedRoom = await RoomService.getRoomByCode(room.code)
-      expect(deletedRoom).toBeNull()
+      const oldUserRoom = await RoomService.getRoomByCode(room.code)
+      expect(oldUserRoom.userId).toBeNull()
     })
 
     describe('404', () => {

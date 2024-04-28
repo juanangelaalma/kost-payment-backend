@@ -9,6 +9,8 @@ const MidtransController = require("./controllers/midtrans.controller")
 const requireAdmin = require("./middlewares/requireAdmin")
 const TenantSchema = require("./schemas/tenant.schema")
 const TenantController = require("./controllers/tenant.controller")
+const RoomController = require("./controllers/room.controller")
+const RoomSchema = require("./schemas/room.schema")
 
 const routes = (app) => {
   app.get('/health-check', (req, res) => res.send('OK'))
@@ -30,6 +32,9 @@ const routes = (app) => {
 
   app.post('/api/admin/tenants', requireUser, requireAdmin, validateRequest(TenantSchema.createTenantSchema), TenantController.createTenantHandler)
   app.delete('/api/admin/tenants/:id', requireUser, requireAdmin, TenantController.deleteTenantHandler)
+
+  app.get('/api/admin/rooms', requireUser, requireAdmin, RoomController.getRoomsHandler)
+  app.post('/api/admin/rooms', requireUser, requireAdmin, validateRequest(RoomSchema.createRoomSchema), RoomController.createRoomHandler)
 }
 
 module.exports = routes

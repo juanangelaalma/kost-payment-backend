@@ -16,12 +16,12 @@ module.exports = (sequelize, DataTypes) => {
   Room.init({
     userId: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
       references: {
         model: 'Users',
         key: 'id'
       },
-      onDelete: 'CASCADE',
+      onDelete: 'SET NULL',
       onUpdate: 'CASCADE',
     },
     code: {
