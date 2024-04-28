@@ -35,6 +35,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.ENUM('tenant', 'admin'),
       defaultValue: 'tenant',
     },
+    startDate: {
+      type: DataTypes.DATEONLY,
+      allowNull: false,
+      defaultValue: new Date()
+    }
   }, {
     sequelize,
     modelName: 'User',

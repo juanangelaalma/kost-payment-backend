@@ -26,11 +26,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     code: {
       type: DataTypes.STRING
-    },
-    startDate: {
-      type: DataTypes.DATEONLY,
-      allowNull: false,
-      defaultValue: new Date()
     }
   }, {
     sequelize,

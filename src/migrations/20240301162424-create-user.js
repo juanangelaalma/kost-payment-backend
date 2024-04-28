@@ -27,6 +27,10 @@ module.exports = {
         type: Sequelize.ENUM('admin', 'tenant'),
         defaultValue: 'tenant'
       },
+      startDate: {
+        allowNull: false,
+        type: Sequelize.DATEONLY,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

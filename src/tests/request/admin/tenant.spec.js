@@ -41,7 +41,7 @@ describe('manage tenants', () => {
       expect(newTenant.name).toBe(tenantData.name)
       expect(newTenant.email).toBe(tenantData.email)
       expect(newTenant.room.code).toBe(tenantData.roomCode)
-      expect(newTenant.room.startDate).toBe(tenantData.startDate)
+      expect(newTenant.startDate).toBe(tenantData.startDate)
     })
 
     describe('when startDate is null', () => {
@@ -69,7 +69,7 @@ describe('manage tenants', () => {
         expect(newTenant.name).toBe(tenantData.name)
         expect(newTenant.email).toBe(tenantData.email)
         expect(newTenant.room.code).toBe(tenantData.roomCode)
-        expect(newTenant.room.startDate).not.toBe(null)
+        expect(newTenant.startDate).not.toBe(null)
       })
 
       describe('400', () => {
