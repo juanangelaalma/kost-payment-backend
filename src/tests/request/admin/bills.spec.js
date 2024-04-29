@@ -217,6 +217,66 @@ describe("Admin bills request test", () => {
           expect(response.body.data.bills[0].total).toBe('Rp 300.000,00')
         })
       })
+
+      describe('with filter', () => {
+        it('should response with correct date', async () => {
+          const admin = await UserFactory.createRandomUser({ role: 'admin' })
+
+          const user1 = await UserFactory.createRandomUser()
+          const user2 = await UserFactory.createRandomUser()
+          const user3 = await UserFactory.createRandomUser()
+
+          await RoomFactory.createRoomUser({
+            user: user1, code
+              : 'K-101'
+          })
+
+          await RoomFactory.createRoomUser({ user: user2, code: 'K-102' })
+
+          await RoomFactory.createRoomUser({ user: user3, code: 'K-103'})
+
+          const bill1 = await BillFactory.createBillUser(user1, 100000, '2022-04-01')
+          const bill2 = await BillFactory.createBillUser(user2, 200000, '2022-05-01')
+          const bill3 = await BillFactory.createBillUser(user3, 300000, '2022-06-01')
+
+          const paymentMethod = await PaymentMethodFactory.createPaymentMethod()
+          const paidPayment = await PaymentFactory.createPaymentBill({ bill: bill3, paymentMethod, status: 'paid' })
+
+          let response = await request(app)
+            .get('/api/admin/bills?status=unpaid')
+            .set('email', admin.email)
+            .set('password', admin.password)
+
+          expect(response.status).toBe(200)
+
+          expect(response.body.success).toBe(true)
+          expect(response.body.data.bills.length).toEqual(2)
+
+          expect(response.body.data.bills[1].id).toEqual(bill1.id)
+          expect(response.body.data.bills[1].roomCode).toEqual('K-101')
+          expect(response.body.data.bills[1].month).toEqual('April')
+          expect(response.body.data.bills[1].year).toEqual('2022')
+
+          expect(response.body.data.bills[0].id).toEqual(bill2.id)
+          expect(response.body.data.bills[0].roomCode).toEqual('K-102')
+          expect(response.body.data.bills[0].month).toEqual('Mei')
+          expect(response.body.data.bills[0].year).toEqual('2022')
+
+          response = await request(app)
+            .get('/api/admin/bills?status=paid')
+            .set('email', admin.email)
+            .set('password', admin.password)
+
+          expect(response.status).toBe(200)
+          expect(response.body.success).toBe(true)
+          expect(response.body.data.bills.length).toEqual(1)
+
+          expect(response.body.data.bills[0].id).toEqual(bill3.id)
+          expect(response.body.data.bills[0].roomCode).toEqual('K-103')
+          expect(response.body.data.bills[0].month).toEqual('Juni')
+          expect(response.body.data.bills[0].year).toEqual('2022')
+        })
+      })
     })
   })
 })

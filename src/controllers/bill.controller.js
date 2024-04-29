@@ -131,16 +131,16 @@ const countBillsHandler = async (req, res) => {
 }
 
 const getBillsAdminHandler = async (req, res) => {
+  const { status, limit } = req.query
+
   try {
-    let unpaidBillsWithRoom = await BillService.getUnpaidBillsWithRoom()
+    let billsWithRoom = await BillService.getBillsWithRoomByStatus(status)
 
-    console.log(req.query.limit)
-
-    if (req.query.limit) {
-      unpaidBillsWithRoom = unpaidBillsWithRoom.slice(0, req.query.limit)
+    if (limit) {
+      billsWithRoom = billsWithRoom.slice(0, req.query.limit)
     }
 
-    const formattedResponse = unpaidBillsWithRoom.map(bill => {
+    const formattedResponse = billsWithRoom.map(bill => {
       return {
         id: bill.id,
         roomCode: bill.user.room.code,

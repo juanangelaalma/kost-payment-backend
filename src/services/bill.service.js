@@ -74,38 +74,49 @@ const getCountBills = async () => {
   return total
 }
 
-const getUnpaidBillsWithRoom = async () => {
-  const bills = await Bill.findAll({
-    where: {
+const getBillsWithRoomByStatus = async (status) => {
+  const paymentCondition = status === 'paid'
+    ? {
+      [Op.and]: [
+        { '$payments.id$': { [Op.not]: null } },
+        { '$payments.status$': 'paid' }
+      ]
+    }
+    : {
       [Op.or]: [
         { '$payments.id$': null },
         { '$payments.status$': { [Op.not]: 'paid' } }
       ]
-    },
-    include: [
-      {
-        model: Payment,
-        required: false,
-        as: 'payments',
-      },
-      {
-        model: User,
-        required: true,
-        as: 'user',
-        include: [
-          {
-            model: Room,
-            required: true,
-            as: 'room',
-          }
-        ]
-      }
-    ],
-    order: [['date', 'DESC']]
-  })
+    };
 
-  return bills
-}
+  const includeOptions = [
+    {
+      model: Payment,
+      required: false,
+      as: 'payments',
+    },
+    {
+      model: User,
+      required: true,
+      as: 'user',
+      include: [
+        {
+          model: Room,
+          required: true,
+          as: 'room',
+        }
+      ]
+    }
+  ];
+
+  const bills = await Bill.findAll({
+    where: paymentCondition,
+    include: includeOptions,
+    order: [['date', 'DESC']]
+  });
+
+  return bills;
+};
 
 const createBillUser = async (userId, amount, date) => Bill.create({
   userId: userId,
@@ -118,7 +129,7 @@ const BillService = {
   getBillsUser,
   getBillById,
   getCountBills,
-  getUnpaidBillsWithRoom,
+  getBillsWithRoomByStatus,
   createBillUser
 }
 
