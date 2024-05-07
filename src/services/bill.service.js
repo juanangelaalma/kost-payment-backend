@@ -75,19 +75,20 @@ const getCountBills = async () => {
 }
 
 const getBillsWithRoomByStatus = async (status) => {
-  const paymentCondition = status === 'paid'
-    ? {
-      [Op.and]: [
-        { '$payments.id$': { [Op.not]: null } },
-        { '$payments.status$': 'paid' }
-      ]
-    }
-    : {
-      [Op.or]: [
-        { '$payments.id$': null },
-        { '$payments.status$': { [Op.not]: 'paid' } }
-      ]
-    };
+  const paymentCondition = status ? (
+    status === 'paid'
+      ? {
+        [Op.and]: [
+          { '$payments.id$': { [Op.not]: null } },
+          { '$payments.status$': 'paid' }
+        ]
+      } : {
+        [Op.or]: [
+          { '$payments.id$': { [Op.eq]: null } },
+          { '$payments.status$': 'failed' }
+        ]
+      }
+  ) : {}
 
   const includeOptions = [
     {

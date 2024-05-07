@@ -105,7 +105,8 @@ const payBillHandler = async (req, res) => {
       invoice, amount: bill.amount, vaNumber: midtransPayment.va_number
     })
 
-    paymentLogger.info(createUserInitiatedPaymentLog(user, payment))
+    const userLog = { id: user.id, email: user.email, name: user.name }
+    paymentLogger.info(createUserInitiatedPaymentLog(userLog, payment))
 
     const responseData = {
       invoice,
@@ -150,6 +151,7 @@ const getBillsAdminHandler = async (req, res) => {
         month: parseMonth(bill.month),
         year: `${bill.year}`,
         total: formatCurrency(bill.amount),
+        status: getBillStatus(bill)
       }
     })
 

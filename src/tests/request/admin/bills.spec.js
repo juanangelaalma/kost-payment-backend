@@ -158,25 +158,35 @@ describe("Admin bills request test", () => {
 
         expect(response.status).toBe(200)
         expect(response.body.success).toBe(true)
-        expect(response.body.data.bills.length).toEqual(3)
+        expect(response.body.data.bills.length).toEqual(4)
 
-        expect(response.body.data.bills[2].id).toEqual(bill1.id)
-        expect(response.body.data.bills[2].roomCode).toEqual('K-101')
-        expect(response.body.data.bills[2].month).toEqual('April')
+        expect(response.body.data.bills[3].id).toEqual(bill1.id)
+        expect(response.body.data.bills[3].roomCode).toEqual('K-101')
+        expect(response.body.data.bills[3].month).toEqual('April')
+        expect(response.body.data.bills[3].year).toEqual('2022')
+        expect(response.body.data.bills[3].total).toBe('Rp 100.000,00')
+        expect(response.body.data.bills[3].status).toBe('unpaid')
+        
+        expect(response.body.data.bills[2].id).toEqual(bill2.id)
+        expect(response.body.data.bills[2].roomCode).toEqual('K-102')
+        expect(response.body.data.bills[2].month).toEqual('Mei')
         expect(response.body.data.bills[2].year).toEqual('2022')
-        expect(response.body.data.bills[2].total).toBe('Rp 100.000,00')
-
-        expect(response.body.data.bills[1].id).toEqual(bill2.id)
-        expect(response.body.data.bills[1].roomCode).toEqual('K-102')
-        expect(response.body.data.bills[1].month).toEqual('Mei')
+        expect(response.body.data.bills[2].total).toEqual('Rp 200.000,00')
+        expect(response.body.data.bills[2].status).toBe('unpaid')
+        
+        expect(response.body.data.bills[1].id).toEqual(bill3.id)
+        expect(response.body.data.bills[1].roomCode).toEqual('K-103')
+        expect(response.body.data.bills[1].month).toEqual('Juni')
         expect(response.body.data.bills[1].year).toEqual('2022')
-        expect(response.body.data.bills[1].total).toEqual('Rp 200.000,00')
-
-        expect(response.body.data.bills[0].id).toEqual(bill3.id)
+        expect(response.body.data.bills[1].total).toBe('Rp 300.000,00')
+        expect(response.body.data.bills[1].status).toBe('unpaid')
+        
+        expect(response.body.data.bills[0].id).toEqual(paidBill.id)
         expect(response.body.data.bills[0].roomCode).toEqual('K-103')
-        expect(response.body.data.bills[0].month).toEqual('Juni')
+        expect(response.body.data.bills[0].month).toEqual('Juli')
         expect(response.body.data.bills[0].year).toEqual('2022')
         expect(response.body.data.bills[0].total).toBe('Rp 300.000,00')
+        expect(response.body.data.bills[0].status).toBe('paid')
       })
 
       describe('with limit=2', () => {
