@@ -51,13 +51,29 @@ const deleteTenantById = async (id) => {
   })
 }
 
+const getTenantsWithRooms = async () => {
+  return User.findAll({
+    where: {
+      role: 'tenant'
+    },
+    include: [
+      {
+        model: Room,
+        as: 'room'
+      }
+    ],
+    order: [['createdAt', 'DESC']]
+  })
+}
+
 const UserService = {
   findByEmailPassword,
   getTenantByEmail,
   createTenant,
   getTenantByEmailIncludeRoom,
   getTenantById,
-  deleteTenantById
+  deleteTenantById,
+  getTenantsWithRooms
 }
 
 module.exports = UserService

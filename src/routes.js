@@ -32,6 +32,7 @@ const routes = (app) => {
 
   app.get('/api/admin/bills', requireUser, requireAdmin, BillController.getBillsAdminHandler)
 
+  app.get('/api/admin/tenants', requireUser, requireAdmin, TenantController.getTenantsHandler)
   app.post('/api/admin/tenants', requireUser, requireAdmin, validateRequest(TenantSchema.createTenantSchema), TenantController.createTenantHandler)
   app.delete('/api/admin/tenants/:id', requireUser, requireAdmin, TenantController.deleteTenantHandler)
 

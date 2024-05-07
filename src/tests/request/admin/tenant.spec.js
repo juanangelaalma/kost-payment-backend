@@ -5,6 +5,7 @@ const UserFactory = require("../../../factories/user.factory");
 const UserService = require("../../../services/user.service");
 const RoomFactory = require("../../../factories/room.factory");
 const RoomService = require("../../../services/room.service");
+const formatTimestampToDate = require("../../../utils/formatTimestampToDate");
 
 describe('manage tenants', () => {
   afterEach(async () => {
@@ -148,7 +149,7 @@ describe('manage tenants', () => {
         })
       })
 
-      //uncomplete body
+      // uncomplete body
       describe('when body is not complete', () => {
         it('should return 400 Bad Request', async () => {
           const tenantData = {
@@ -205,6 +206,36 @@ describe('manage tenants', () => {
           expect(response.body.message).toBe('Tenant tidak ditemukan')
         })
       })
+    })
+  })
+
+  describe('GET /api/admin/tenants', () => {
+    it('should return correct data', async () => {
+      const admin = await UserFactory.createRandomUser({ role: 'admin' })
+
+      const tenant1 = await UserFactory.createRandomUser({ role: 'tenant' })
+      const tenant2 = await UserFactory.createRandomUser({ role: 'tenant' })
+
+      const room1 = await RoomFactory.createRoomUser({ user: tenant1, code: 'K1' })
+      const room2 = await RoomFactory.createRoomUser({ user: tenant2, code: 'K2' })
+
+      const response = await request(app).get(`/api/admin/tenants`)
+            .set('email', admin.email)
+            .set('password', admin.password)
+      
+      expect(response.status).toBe(200)
+
+      expect(response.body.data[0].id).toEqual(tenant1.id)
+      expect(response.body.data[0].email).toEqual(tenant1.email)
+      expect(response.body.data[0].name).toEqual(tenant1.name)
+      expect(response.body.data[0].startDate).toEqual(formatTimestampToDate(tenant1.startDate))
+      expect(response.body.data[0].roomCode).toEqual('K1')
+
+      expect(response.body.data[1].id).toEqual(tenant2.id)
+      expect(response.body.data[1].email).toEqual(tenant2.email)
+      expect(response.body.data[1].name).toEqual(tenant2.name)
+      expect(response.body.data[1].startDate).toEqual(formatTimestampToDate(tenant2.startDate))
+      expect(response.body.data[1].roomCode).toEqual('K2')
     })
   })
 })

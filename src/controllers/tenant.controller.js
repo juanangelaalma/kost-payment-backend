@@ -48,9 +48,31 @@ const deleteTenantHandler = async (req, res) => {
   }
 }
 
+const getTenantsHandler = async (req, res) => {
+  try {
+    const tenants = await UserService.getTenantsWithRooms()
+
+    const formattedTenants = tenants.map(tenant => {
+      console.log('room code', tenant.room.code)
+      return {
+        id: tenant.id,
+        email: tenant.email,
+        name: tenant.name,
+        startDate: tenant.startDate,
+        roomCode: tenant.room.code,
+      }
+    })
+
+    return res.status(200).send(createApiResponse(true, formattedTenants, ''))
+  } catch (error) {
+    return res.status(500).send(createApiResponse(false, null, error.message))
+  }
+}
+
 const TenantController = {
   createTenantHandler,
-  deleteTenantHandler
+  deleteTenantHandler,
+  getTenantsHandler
 }
 
 module.exports = TenantController
