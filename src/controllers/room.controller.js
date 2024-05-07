@@ -9,9 +9,9 @@ const getRoomsHandler = async (req, res) => {
       return { id: room.id, code: room.code, available: room.userId === null }
     })
 
-    res.send(createApiResponse(true, formattedResponse))
+    return res.send(createApiResponse(true, formattedResponse))
   } catch (error) {
-    res.status(500).send(createApiResponse(false, null, error.message))
+    return res.status(500).send(createApiResponse(false, null, error.message))
   }
 }
 
@@ -19,11 +19,17 @@ const createRoomHandler = async (req, res) => {
   try {
     const { code } = req.body
 
+    const existingRoom = await RoomService.getRoomByCode(code)
+
+    if (existingRoom) {
+      return res.status(400).send(createApiResponse(false, null, 'Code sudah dipakai'))
+    }
+
     const room = await RoomService.createRoom({ code })
 
-    res.status(201).send(createApiResponse(true, room))
+    return res.status(201).send(createApiResponse(true, room))
   } catch (error) {
-    res.status(500).send(createApiResponse(false, null, error.message))
+    return res.status(500).send(createApiResponse(false, null, error.message))
   }
 }
 
