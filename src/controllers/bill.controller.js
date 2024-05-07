@@ -7,6 +7,7 @@ const formatCurrency = require("../utils/formatCurrency")
 const generateInvoiceNumber = require("../utils/generateInvoiceNumber")
 const getBillStatus = require("../tests/utils/getBillStatus")
 const parseMonth = require("../utils/parseMonth")
+const { paymentLogger,  createUserInitiatedPaymentLog } = require("../logger/paymentLogger")
 
 const getTotalBillsHandler = async (req, res) => {
   const user = res.locals.user
@@ -103,6 +104,8 @@ const payBillHandler = async (req, res) => {
       billId: bill.id, paymentMethodId: paymentMethod.id,
       invoice, amount: bill.amount, vaNumber: midtransPayment.va_number
     })
+
+    paymentLogger.info(createUserInitiatedPaymentLog(user, payment))
 
     const responseData = {
       invoice,

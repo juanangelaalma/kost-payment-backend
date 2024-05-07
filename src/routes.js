@@ -13,7 +13,9 @@ const RoomController = require("./controllers/room.controller")
 const RoomSchema = require("./schemas/room.schema")
 
 const routes = (app) => {
-  app.get('/health-check', (req, res) => res.send('OK'))
+  app.get('/health-check', (req, res) => {
+    return res.send('Hello')
+  })
   
   app.post('/api/login', validateRequest(LoginSchema.createLoginSchema), UserController.loginHandler)
 
