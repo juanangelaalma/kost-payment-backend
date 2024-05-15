@@ -28,11 +28,29 @@ const getAllRooms = async () => {
   return Room.findAll()
 }
 
+const deleteRoomById = (id) => {
+  return Room.destroy({
+    where: {
+      id
+    }
+  })
+}
+
+const getRoomById = async (id) => {
+  return Room.findOne({
+    where: {
+      id
+    }
+  })
+}
+
 const RoomService = {
   getRoomByCode,
   createRoom,
   getRoomsStartingFromToday,
-  getAllRooms
+  getAllRooms,
+  deleteRoomById,
+  getRoomById
 }
 
 module.exports = RoomService

@@ -132,4 +132,39 @@ describe("Admin rooms request test", () => {
       })
     })
   })
+
+  describe('DELETE /api/admin/rooms/:id', () => {
+    it('should response with 200 OK and room was deleted', async () => {
+      const admin = await UserFactory.createRandomUser({ role: 'admin' })
+      const room = await RoomFactory.createRoom()
+
+      const response = await request(app)
+        .delete(`/api/admin/rooms/${room.id}`)
+        .set('email', admin.email)
+        .set('password', admin.password)
+
+      expect(response.status).toBe(200)
+      expect(response.body.success).toBe(true)
+
+      const deletedRoom = await RoomService.getRoomByCode(room.code)
+      expect(deletedRoom).toEqual(null)
+    })
+
+    describe('when room was rented by tenant', () => {
+      it('should response with 409 Conflict', async () => {
+        const tenant = await UserFactory.createRandomUser({ role: 'tenant' })
+        const admin = await UserFactory.createRandomUser({ role: 'admin' })
+        const room = await RoomFactory.createRoomUser({ user: tenant })
+
+        const response = await request(app)
+          .delete(`/api/admin/rooms/${room.id}`)
+          .set('email', admin.email)
+          .set('password', admin.password)
+
+        expect(response.status).toBe(409)
+        expect(response.body.success).toBe(false)
+        expect(response.body.message).toEqual('Kamar tidak dapat dihapus karena sedang ditempati oleh penyewa.')
+      })
+    })
+  })
 });

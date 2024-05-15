@@ -33,9 +33,27 @@ const createRoomHandler = async (req, res) => {
   }
 }
 
+const deleteRoomHandler = async (req, res) => {
+  try {
+    const { id } = req.params
+
+    const existingRoom = await RoomService.getRoomById(id)
+    if (existingRoom.userId) {
+      return res.status(409).send(createApiResponse(false, null, 'Kamar tidak dapat dihapus karena sedang ditempati oleh penyewa.'))
+    }
+
+    await RoomService.deleteRoomById(id)
+    
+    return res.status(200).send(createApiResponse(true, null, ''))
+  } catch (error) {
+    return res.status(500).send(createApiResponse(false, null, error.message))
+  }
+}
+
 const RoomController = {
   getRoomsHandler,
-  createRoomHandler
+  createRoomHandler,
+  deleteRoomHandler
 }
 
 module.exports = RoomController

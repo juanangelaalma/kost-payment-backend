@@ -38,6 +38,7 @@ const routes = (app) => {
 
   app.get('/api/admin/rooms', requireUser, requireAdmin, RoomController.getRoomsHandler)
   app.post('/api/admin/rooms', requireUser, requireAdmin, validateRequest(RoomSchema.createRoomSchema), RoomController.createRoomHandler)
+  app.delete('/api/admin/rooms/:id', requireUser, requireAdmin, RoomController.deleteRoomHandler)
 }
 
 module.exports = routes
