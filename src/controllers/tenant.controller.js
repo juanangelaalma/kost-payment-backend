@@ -11,8 +11,8 @@ const createTenantHandler = async (req, res) => {
       return res.status(400).send(createApiResponse(false, null, 'Email sudah digunakan'))
     }
 
-    const existingRoom = await RoomService.getRoomByCode(roomCode)
-    if (existingRoom) {
+    let existingRoom = await RoomService.getRoomByCode(roomCode)
+    if (existingRoom?.userId) {
       return res.status(400).send(createApiResponse(false, null, 'Kode kamar harus unik'))
     }
 
@@ -20,12 +20,17 @@ const createTenantHandler = async (req, res) => {
       email, name, password, roomCode, startDate
     })
 
-    const room = await RoomService.createRoom({
-      code: roomCode,
-      userId: newTenant.id
-    })
+    if (existingRoom) {
+      existingRoom.userId = newTenant.id
+      existingRoom.save()
+    } else {
+      existingRoom = await RoomService.createRoom({
+        code: roomCode,
+        userId: newTenant.id
+      })
+    }
 
-    return res.status(201).send(createApiResponse(true, { ...newTenant.dataValues, roomCode: room.code, startDate: room.startDate }, 'Tenant berhasil dibuat'))
+    return res.status(201).send(createApiResponse(true, { ...newTenant.dataValues, roomCode: existingRoom.code, startDate: existingRoom.startDate }, 'Tenant berhasil dibuat'))
   } catch (error) {
     return res.status(500).send(createApiResponse(false, null, error.message))
   }
@@ -53,13 +58,13 @@ const getTenantsHandler = async (req, res) => {
     const tenants = await UserService.getTenantsWithRooms()
 
     const formattedTenants = tenants.map(tenant => {
-      console.log('room code', tenant.room.code)
+      console.log('room code', tenant.room?.code)
       return {
         id: tenant.id,
         email: tenant.email,
         name: tenant.name,
         startDate: tenant.startDate,
-        roomCode: tenant.room.code,
+        roomCode: tenant.room?.code,
       }
     })
 
