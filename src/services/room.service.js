@@ -33,7 +33,9 @@ const getRoomsStartingFromToday = async (currentDate) => {
     return user.room
   });
 
-  return rooms
+  const removeNullRoom = rooms.filter(room => room !== null)
+
+  return removeNullRoom
 }
 
 const getAllRooms = async () => {
