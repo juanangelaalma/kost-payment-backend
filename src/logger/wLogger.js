@@ -1,4 +1,7 @@
 const winston = require('winston');
+const {LoggingWinston} = require('@google-cloud/logging-winston');
+
+const loggingWinston = new LoggingWinston()
 
 const config = {
   levels: {
@@ -41,37 +44,7 @@ const wLogger = ({ logName, level }) =>
           winston.format.colorize({ all: true })
         )
       }),
-      new winston.transports.File({
-        filename: `./src/logs/${logName}/${logName}-Error.log`,
-        level: 'error',
-        format: winston.format.combine(
-          winston.format.timestamp(timestampConfigs),
-          winston.format.printf(
-            info => `[${info.timestamp}] ${info.level.toLocaleUpperCase()}: ${info.message}`
-          ),
-        )
-      }),
-      new winston.transports.File({
-        filename: `./src/logs/${logName}/${logName}-Info.log`,
-        level: 'info',
-        format: winston.format.combine(
-          winston.format.timestamp(timestampConfigs),
-          winston.format.printf(
-            info => `[${info.timestamp}] ${info.level.toLocaleUpperCase()}: ${info.message}`
-          ),
-        )
-      }),
-
-      new winston.transports.File({
-        format: winston.format.combine(
-          winston.format.timestamp(timestampConfigs),
-          winston.format.printf(
-            info => `[${info.timestamp}] ${info.level.toLocaleUpperCase()}: ${info.message}`
-          ),
-        ),
-        filename: './src/logs/globalLog.log',
-        level: 'silly'
-      })
+      loggingWinston
     ]
   });
 
