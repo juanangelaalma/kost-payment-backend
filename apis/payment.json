@@ -115,6 +115,7 @@
                   "data": [
                     {
                       "id": 1,
+                      "invoice": "INV9281989318013",
                       "month": "Juli",
                       "year": "2020",
                       "amount": 30000000,
@@ -1039,6 +1040,9 @@
               "properties": {
                 "id": {
                   "type": "number"
+                },
+                "invoice": {
+                  "type": "string"
                 },
                 "month": {
                   "type": "string"

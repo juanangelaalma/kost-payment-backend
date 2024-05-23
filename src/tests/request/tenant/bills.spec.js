@@ -158,10 +158,7 @@ describe("Bills request test", () => {
               month: parseMonth(bill2.month),
               year: bill2.year,
               amount: "Rp 200.000,00",
-              status: "unpaid",
-              _links: {
-                pay: `/api/bills/${bill2.id}/pay`
-              }
+              status: "unpaid"
             },
             {
               id: bill1.id,
@@ -169,10 +166,7 @@ describe("Bills request test", () => {
               month: parseMonth(bill1.month),
               year: bill1.year,
               amount: "Rp 100.000,00",
-              status: "unpaid",
-              _links: {
-                pay: `/api/bills/${bill1.id}/pay`
-              }
+              status: "unpaid"
             },
           ],
           message: null,
@@ -210,10 +204,7 @@ describe("Bills request test", () => {
               month: parseMonth(bill4.month),
               year: bill4.year,
               amount: "Rp 400.000,00",
-              status: "unpaid",
-              _links: {
-                pay: `/api/bills/${bill4.id}/pay`
-              }
+              status: "unpaid"
             },
             {
               id: bill3.id,
@@ -221,10 +212,7 @@ describe("Bills request test", () => {
               month: parseMonth(bill3.month),
               year: bill3.year,
               amount: "Rp 300.000,00",
-              status: "paid",
-              _links: {
-                pay: `/api/bills/${bill3.id}/pay`
-              }
+              status: "paid"
             },
             {
               id: bill2.id,
@@ -232,10 +220,7 @@ describe("Bills request test", () => {
               month: parseMonth(bill2.month),
               year: bill2.year,
               amount: "Rp 200.000,00",
-              status: "pending",
-              _links: {
-                pay: `/api/bills/${bill2.id}/pay`
-              }
+              status: "pending"
             },
             {
               id: bill1.id,
@@ -243,10 +228,7 @@ describe("Bills request test", () => {
               month: parseMonth(bill1.month),
               year: bill1.year,
               amount: "Rp 100.000,00",
-              status: "paid",
-              _links: {
-                pay: `/api/bills/${bill1.id}/pay`
-              }
+              status: "paid"
             },
           ],
           message: null,
@@ -284,10 +266,7 @@ describe("Bills request test", () => {
                 month: parseMonth(bill4.month),
                 year: bill4.year,
                 amount: "Rp 400.000,00",
-                status: "unpaid",
-                _links: {
-                  pay: `/api/bills/${bill4.id}/pay`
-                }
+                status: "unpaid"
               },
               {
                 id: bill3.id,
@@ -295,10 +274,7 @@ describe("Bills request test", () => {
                 month: parseMonth(bill3.month),
                 year: bill3.year,
                 amount: "Rp 300.000,00",
-                status: "paid",
-                _links: {
-                  pay: `/api/bills/${bill3.id}/pay`
-                }
+                status: "paid"
               },
               {
                 id: bill1.id,
@@ -306,10 +282,7 @@ describe("Bills request test", () => {
                 month: parseMonth(bill1.month),
                 year: bill1.year,
                 amount: "Rp 100.000,00",
-                status: "paid",
-                _links: {
-                  pay: `/api/bills/${bill1.id}/pay`
-                }
+                status: "paid"
               },
             ],
             message: null,
@@ -348,10 +321,7 @@ describe("Bills request test", () => {
                 month: parseMonth(bill4.month),
                 year: bill4.year,
                 amount: "Rp 400.000,00",
-                status: "unpaid",
-                _links: {
-                  pay: `/api/bills/${bill4.id}/pay`
-                }
+                status: "unpaid"
               },
               {
                 id: bill3.id,
@@ -359,10 +329,7 @@ describe("Bills request test", () => {
                 month: parseMonth(bill3.month),
                 year: bill3.year,
                 amount: "Rp 300.000,00",
-                status: "paid",
-                _links: {
-                  pay: `/api/bills/${bill3.id}/pay`
-                }
+                status: "paid"
               },
             ],
             message: null,
@@ -401,10 +368,7 @@ describe("Bills request test", () => {
                 month: parseMonth(bill3.month),
                 year: bill3.year,
                 amount: "Rp 300.000,00",
-                status: "paid",
-                _links: {
-                  pay: `/api/bills/${bill3.id}/pay`
-                }
+                status: "paid"
               },
             ],
             message: null,

@@ -41,9 +41,6 @@ const getBillsUserHandler = async (req, res) => {
         amount: formatCurrency(bill.amount),
         status: getBillStatus(bill),
         invoice: paidOrPendingPayments.length > 0 ? paidOrPendingPayments[0].invoice : null,
-        _links: {
-          pay: `/api/bills/${bill.id}/pay`
-        }
       }
     })
 
