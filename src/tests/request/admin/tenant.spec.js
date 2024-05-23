@@ -187,9 +187,27 @@ describe('manage tenants', () => {
 
       const deletedTenant = await UserService.getTenantByEmail(tenant.email)
       expect(deletedTenant).toBeNull()
-      
+
       const oldUserRoom = await RoomService.getRoomByCode(room.code)
       expect(oldUserRoom.userId).toBeNull()
+    })
+
+    describe('when tenant does not have room', () => {
+      it.only('should return 200 OK and success remove tenant', async () => {
+        const tenant = await UserFactory.createRandomUser({ role: 'tenant' })
+
+        const admin = await UserFactory.createRandomUser({ role: 'admin' })
+
+        const response = await request(app).delete(`/api/admin/tenants/${tenant.id}`)
+          .set('email', admin.email)
+          .set('password', admin.password)
+
+        expect(response.status).toBe(200)
+        expect(response.body.success).toBe(true)
+
+        const deletedTenant = await UserService.getTenantByEmail(tenant.email)
+        expect(deletedTenant).toBeNull()
+      })
     })
 
     describe('404', () => {
@@ -220,9 +238,9 @@ describe('manage tenants', () => {
       const room2 = await RoomFactory.createRoomUser({ user: tenant2, code: 'K2' })
 
       const response = await request(app).get(`/api/admin/tenants`)
-            .set('email', admin.email)
-            .set('password', admin.password)
-      
+        .set('email', admin.email)
+        .set('password', admin.password)
+
       expect(response.status).toBe(200)
 
       expect(response.body.data[0].id).toEqual(tenant1.id)
