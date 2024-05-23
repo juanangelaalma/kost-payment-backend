@@ -108,9 +108,6 @@ const payBillHandler = async (req, res) => {
     const responseData = {
       invoice,
       status: 'pending',
-      _links: {
-        instruction: `/api/payments/${invoice}`,
-      }
     }
 
     return res.status(201).send(createApiResponse(true, responseData, null))

@@ -125,9 +125,7 @@ describe("Pay request test", () => {
         expect(response.body.success).toEqual(true);
         expect(response.body.data.invoice).toBeDefined();
         expect(response.body.data.status).toEqual('pending');
-        expect(response.body.data._links).toEqual({
-          "instruction": `/api/payments/${response.body.data.invoice}`,
-        });
+        expect(response.body.data._links).not.toBeDefined()
       })
     })
   })
