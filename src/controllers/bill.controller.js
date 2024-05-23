@@ -120,7 +120,6 @@ const payBillHandler = async (req, res) => {
   } catch (error) {
     if (error instanceof MidtransError) {
       paymentLogger.error(error)
-      console.log(error)
       return res.status(500).send(createApiResponse(false, error, 'Midtrans error'))
     }
     return res.status(500).send(createApiResponse(false, null, error.message))

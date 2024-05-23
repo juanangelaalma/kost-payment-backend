@@ -11,12 +11,13 @@
         "summary": "Total tagihan pengguna",
         "parameters": [
           {
-            "name": "Username",
+            "name": "email",
             "in": "header",
-            "description": "Username pengguna",
+            "description": "Email pengguna",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "user@gmail.com"
             }
           },
           {
@@ -25,7 +26,8 @@
             "description": "Password pengguna",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "password123"
             }
           }
         ],
@@ -48,7 +50,7 @@
             }
           },
           "401": {
-            "description": "Username dan Password yang dikirim tidak benar",
+            "description": "email dan Password yang dikirim tidak benar",
             "content": {
               "application/json": {
                 "schema": {
@@ -70,12 +72,13 @@
         "summary": "Riwayat tagihan pengguna",
         "parameters": [
           {
-            "name": "Username",
+            "name": "email",
             "in": "header",
-            "description": "Username pengguna",
+            "description": "Email pengguna",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "user@gmail.com"
             }
           },
           {
@@ -84,16 +87,18 @@
             "description": "Password pengguna",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "password123"
             }
           },
           {
-            "name": "Limit",
+            "name": "limit",
             "in": "query",
             "description": "Batas jumlah riwayat yang ingin ditampilkan",
             "required": false,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "example": 3
             }
           }
         ],
@@ -113,11 +118,7 @@
                       "month": "Juli",
                       "year": "2020",
                       "amount": 30000000,
-                      "status": "pending",
-                      "_links": {
-                        "pay": "https://kost.com/api/bills/1/pay",
-                        "details": "https://kost.com/api/1/bills/details"
-                      }
+                      "status": "pending"
                     }
                   ],
                   "message": ""
@@ -126,7 +127,7 @@
             }
           },
           "401": {
-            "description": "Username dan Password yang dikirim tidak benar",
+            "description": "email dan Password yang dikirim tidak benar",
             "content": {
               "application/json": {
                 "schema": {
@@ -145,23 +146,16 @@
     },
     "/api/bills/:id/pay": {
       "post": {
-        "summary": "Endpoints untuk bayar",
+        "summary": "Endpoints untuk membuat pembayaran tagihan",
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "Username",
+            "name": "email",
             "in": "header",
-            "description": "Username pengguna",
+            "description": "Email pengguna",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "user@gmail.com"
             }
           },
           {
@@ -170,7 +164,18 @@
             "description": "Password pengguna",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "password123"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID tagihan",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": 1
             }
           }
         ],
@@ -213,8 +218,28 @@
     },
     "/api/payments/:invoice": {
       "get": {
-        "summary": "Endpoints untuk mendapatkan details payment",
+        "summary": "Endpoints untuk mendapatkan rincian pembayaran",
         "parameters": [
+          {
+            "name": "email",
+            "in": "header",
+            "description": "Email pengguna",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "user@gmail.com"
+            }
+          },
+          {
+            "name": "Password",
+            "in": "header",
+            "description": "Password pengguna",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "password123"
+            }
+          },
           {
             "name": "invoice",
             "in": "path",
@@ -236,10 +261,12 @@
                 "example": {
                   "success": true,
                   "data": {
+                    "id": 1,
                     "invoice": "INV129109303",
                     "amount": "Rp 400.000,00",
-                    "deadline": "Selasa, 19 Juli 2023 18:00 WIB",
-                    "sttaus": "pending",
+                    "formattedDeadline": "Selasa, 19 Juli 2023 18:00 WIB",
+                    "deadline": "2024-05-22T23:55:32.000Z",
+                    "status": "pending",
                     "payment": {
                       "title": "BNI Virtual Account",
                       "logo": "https://bni.com/logo.png",
@@ -254,10 +281,639 @@
           }
         }
       }
+    },
+    "/api/admin/count-bills": {
+      "get": {
+        "parameters": [
+          {
+            "name": "email",
+            "in": "header",
+            "description": "Email pengguna",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "admin@gmail.com"
+            }
+          },
+          {
+            "name": "Password",
+            "in": "header",
+            "description": "Password pengguna",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "password123"
+            }
+          }
+        ],
+        "summary": "Endpoints untuk mendapatkan jumlah tagihan yang belum dibayar",
+        "responses": {
+          "200": {
+            "description": "Sukses mendapatkan jumlah tagihan yang belum dibayar",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminCountBillsResponseSuccess"
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "total": 10
+                  },
+                  "message": ""
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/bills": {
+      "get": {
+        "parameters": [
+          {
+            "name": "email",
+            "in": "header",
+            "description": "Email pengguna",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "admin@gmail.com"
+            }
+          },
+          {
+            "name": "Password",
+            "in": "header",
+            "description": "Password pengguna",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "password123"
+            }
+          }
+        ],
+        "summary": "Endpoints untuk mendapatkan semua tagihan penyewa",
+        "responses": {
+          "200": {
+            "description": "Sukses mendapatkan semua tagihan penyewa",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminBillsResponseSuccess"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/tenants": {
+      "get": {
+        "parameters": [
+          {
+            "name": "email",
+            "in": "header",
+            "description": "Email pengguna",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "admin@gmail.com"
+            }
+          },
+          {
+            "name": "Password",
+            "in": "header",
+            "description": "Password pengguna",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "password123"
+            }
+          }
+        ],
+        "summary": "Mendapatkan daftar penyewa",
+        "responses": {
+          "200": {
+            "description": "Sukses mendapatkan data penyewa",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminTenantResponseSuccess"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "parameters": [
+          {
+            "name": "email",
+            "in": "header",
+            "description": "Email pengguna",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "admin@gmail.com"
+            }
+          },
+          {
+            "name": "Password",
+            "in": "header",
+            "description": "Password pengguna",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "password123"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestBodyCreateTenant"
+              }
+            }
+          }
+        },
+        "summary": "Membuat data penyewa",
+        "responses": {
+          "201": {
+            "description": "Sukses membuat penyewa baru ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminCreateTenantSuccessResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/tenants/:id": {
+      "delete": {
+        "parameters": [
+          {
+            "name": "email",
+            "in": "header",
+            "description": "Email pengguna",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "admin@gmail.com"
+            }
+          },
+          {
+            "name": "Password",
+            "in": "header",
+            "description": "Password pengguna",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "password123"
+            }
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "description": "id penyewa yang ingin dihapus",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "example": 1
+            }
+          }
+        ],
+        "summary": "Menghapus data penyewa",
+        "responses": {
+          "200": {
+            "description": "Sukses menghapus data penyewa ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminDeleteTenantResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/rooms": {
+      "get": {
+        "parameters": [
+          {
+            "name": "email",
+            "in": "header",
+            "description": "Email pengguna",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "admin@gmail.com"
+            }
+          },
+          {
+            "name": "Password",
+            "in": "header",
+            "description": "Password pengguna",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "password123"
+            }
+          }
+        ],
+        "summary": "Melihat daftar Kamar",
+        "responses": {
+          "200": {
+            "description": "Sukses mendapatkan daftar kamar ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminGetRoomsResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "parameters": [
+          {
+            "name": "email",
+            "in": "header",
+            "description": "Email pengguna",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "admin@gmail.com"
+            }
+          },
+          {
+            "name": "Password",
+            "in": "header",
+            "description": "Password pengguna",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "password123"
+            }
+          }
+        ],
+        "summary": "Membuat data Kamar baru",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestBodyCreateRoom"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Sukses membuat data kamar baru",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminCreateRoomSuccessResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/rooms/:id": {
+      "delete": {
+        "parameters": [
+          {
+            "name": "email",
+            "in": "header",
+            "description": "Email pengguna",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "admin@gmail.com"
+            }
+          },
+          {
+            "name": "Password",
+            "in": "header",
+            "description": "Password pengguna",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "password123"
+            }
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "description": "id kamar yang ingin dihapus",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "example": 1
+            }
+          }
+        ],
+        "summary": "Menghapus data kamar",
+        "responses": {
+          "200": {
+            "description": "Sukses menghapus data kamar",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminDeleteRoomResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "AdminDeleteRoomResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "type": "object",
+            "example": {}
+          },
+          "message": {
+            "type": "string",
+            "example": "Kamar berhasil dihapus"
+          }
+        }
+      },
+      "AdminCreateRoomSuccessResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number",
+                "example": 1
+              },
+              "code": {
+                "type": "string",
+                "example": "K-101"
+              }
+            }
+          },
+          "message": {
+            "type": "string",
+            "example": ""
+          }
+        }
+      },
+      "RequestBodyCreateRoom": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "K-101"
+          }
+        }
+      },
+      "AdminGetRoomsResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "number",
+                  "example": 1
+                },
+                "code": {
+                  "type": "string",
+                  "example": "K-101"
+                },
+                "available": {
+                  "type": "boolean",
+                  "example": true
+                }
+              }
+            }
+          },
+          "message": {
+            "type": "string",
+            "example": ""
+          }
+        }
+      },
+      "AdminDeleteTenantResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "type": "object"
+          },
+          "message": {
+            "type": "string",
+            "example": "Penyewa berhasil dihapus"
+          }
+        }
+      },
+      "AdminCreateTenantSuccessResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "number",
+                  "example": 3
+                },
+                "email": {
+                  "type": "string",
+                  "example": "newuser@gmail.com"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "John Chena"
+                },
+                "role": {
+                  "type": "string",
+                  "example": "tenant"
+                },
+                "startDate": {
+                  "type": "string",
+                  "example": "2022-01-01"
+                },
+                "roomCode": {
+                  "type": "string",
+                  "example": "K-101"
+                }
+              }
+            }
+          },
+          "message": {
+            "type": "string",
+            "example": ""
+          }
+        }
+      },
+      "RequestBodyCreateTenant": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "newuser@gmail.com"
+          },
+          "name": {
+            "type": "string",
+            "example": "John Chena"
+          },
+          "password": {
+            "type": "string",
+            "example": "password"
+          },
+          "roomCode": {
+            "type": "string",
+            "example": "K-101"
+          },
+          "startDate": {
+            "type": "string",
+            "example": "2022-01-01"
+          }
+        }
+      },
+      "AdminTenantResponseSuccess": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "number",
+                  "example": 3
+                },
+                "email": {
+                  "type": "string",
+                  "example": "user@gmail.com"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "John"
+                },
+                "startDate": {
+                  "type": "string",
+                  "example": "2024-05-19"
+                },
+                "roomCode": {
+                  "type": "string",
+                  "example": "K-101"
+                }
+              }
+            }
+          },
+          "message": {
+            "type": "string",
+            "example": ""
+          }
+        }
+      },
+      "InternalServerErrorResponse": {},
+      "ForbiddenErrorResponse": {},
+      "AdminBillsResponseSuccess": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "number",
+                  "example": 1
+                },
+                "roomCode": {
+                  "type": "string",
+                  "example": "K-101"
+                },
+                "month": {
+                  "type": "string",
+                  "example": "Juli"
+                },
+                "year": {
+                  "type": "string",
+                  "example": "2024"
+                },
+                "total": {
+                  "type": "string",
+                  "example": "Rp 100.000,00"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "paid",
+                    "pending",
+                    "unpaid"
+                  ]
+                }
+              }
+            }
+          },
+          "message": {
+            "type": "string",
+            "example": ""
+          }
+        }
+      },
+      "AdminCountBillsResponseSuccess": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "total": {
+                "type": "number"
+              }
+            }
+          },
+          "message": {
+            "type": "string",
+            "example": ""
+          }
+        }
+      },
       "PaymentResponseCreated": {
         "type": "object",
         "properties": {
@@ -289,7 +945,8 @@
             }
           },
           "message": {
-            "type": "string"
+            "type": "string",
+            "example": ""
           }
         }
       },
@@ -302,11 +959,17 @@
           "data": {
             "type": "object",
             "properties": {
+              "id": {
+                "type": "number"
+              },
               "invoice": {
                 "type": "string"
               },
               "amount": {
                 "type": "integer"
+              },
+              "formattedDeadline": {
+                "type": "string"
               },
               "deadline": {
                 "type": "string"
@@ -339,7 +1002,8 @@
             }
           },
           "message": {
-            "type": "string"
+            "type": "string",
+            "example": ""
           }
         }
       },
@@ -408,7 +1072,8 @@
             }
           },
           "message": {
-            "type": "string"
+            "type": "string",
+            "example": ""
           }
         }
       },
@@ -448,7 +1113,8 @@
             }
           },
           "message": {
-            "type": "string"
+            "type": "string",
+            "example": ""
           }
         }
       }
